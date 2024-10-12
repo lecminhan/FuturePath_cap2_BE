@@ -1,0 +1,38 @@
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    width: 320px;
+    height: 30px;
+    margin-left: 10px;
+  }
+  
+  .search-input {
+    position: relative;
+    width: 300px;
+  }
+  
+  .search-icon {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #aaa;
+  }
+  
+  input[type="text"] {
+    width: 100%;
+    padding: 10px 10px 10px 40px; /* Thêm khoảng cách để icon không đè lên chữ */
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    outline: none;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Bóng mờ mềm mại */
+    transition: box-shadow 0.3s ease-in-out; /* Hiệu ứng mượt mà khi tương tác */
+  }
+  
+  input[type="text"]::placeholder {
+    color: #aaa;
+  }
+  

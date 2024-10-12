@@ -1,0 +1,51 @@
+
+.section-1{
+    display: flex;
+    padding: 10px 20px;
+    margin-top:20px ;
+}
+
+.table1{
+    width: 250px;
+    height: 70px;
+    background-color: #fff;
+    margin-bottom: 8px;
+    
+}
+.box{
+    border-radius: 10px;
+}
+.table2{
+    width: 250px;
+    height: 77px;
+    background-color: #fff;
+    margin-bottom: 8px;
+}
+.table3{
+    width: 250px;
+    height: 380px;
+    background-color: #fff;
+}
+.section-right{
+}
+.table4{
+    width: 660px;
+    height: 543px;
+    background-color: #fff;
+    margin-left: 10px ;
+}
+
+.section-2{
+    display: flex;
+    width: 920px;
+    height: 320px;
+    border-radius: 10px;
+    background-color: #fff;
+    margin:0px 20px 10px 20px;
+}
+.datePicker3{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}

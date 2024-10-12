@@ -1,0 +1,78 @@
+
+.section1 {
+    display: flex;
+    justify-content: space-between;
+    margin:20px
+}
+.box-color{
+    background: #fff;
+    border-radius: 10px;
+}
+.today-revenue, .available, .active, .maintenance {
+    width: 224px;
+    height: 129px;
+    flex-shrink: 0;
+}
+.today-revenue{
+    color: #5B6C8F;
+}
+.available{
+    color: #00B087;
+}
+.active{
+    color:#2DCA34;
+}
+.maintenance{
+    color: #F9C405;
+}
+h3{
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 0;
+}
+.box-color p{
+    font-size: 35px;
+    text-align: center;
+    margin: 0;
+    font-weight: 500;
+}
+.title-recentrans{
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 0;
+    color: #5B6C8F;
+    font-weight: 500;
+}
+.content-recentrans{
+    margin-top: 0;
+    list-style-type: none;
+    padding:0;
+    margin: 0;
+}
+.section2{
+    display: flex;
+    justify-content: space-between;
+}
+.chart{
+    width: 672px;
+    height:367px;
+    margin:0 10px 0 20px;
+}
+.r-transactions{
+    width: 250px;
+    height: 367px;
+    margin-right: 20px;
+}
+.top-header{
+    display: flex;
+    justify-content: space-between;
+}
+.chart-line{
+    width:640px;
+    display: flex;
+    height: 350px;
+}
+.datePicker{
+    margin:10px;
+    margin-bottom: 0;
+}

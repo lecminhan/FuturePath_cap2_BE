@@ -1,0 +1,28 @@
+
+.header{
+    height: 30px;
+    margin-bottom: 10px;
+}
+.reload{
+    float: right;
+}
+.machine-2{
+    display: flex;
+}
+.machine-active{
+   display: flex;
+   width: 920px;
+   height: 400px;
+   border-radius: 10px;
+   background-color: #fff;
+   margin:20px;
+}
+.usage-chart{
+    display: flex;
+    width: 920px;
+    height: 320px;
+    border-radius: 10px;
+    background-color: #fff;
+    margin:20px;
+ }
+

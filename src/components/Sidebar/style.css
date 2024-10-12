@@ -1,0 +1,64 @@
+
+  .sidebar .title {
+    display: flex;
+    align-items: center;
+    color: #5B6C8F;
+    margin-left: 15px;
+  }
+  .sidebar .icon {
+    width: 37px;
+    height: 37px;
+  }
+  
+  .sidebar h1 {
+    color: #5B6C8F;
+    font-size: 26px;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: 0.26px;
+    margin-left: 15px;
+  }
+  
+  .sidebar .navigationBar ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .sidebar .navigationBar ul li  {
+    padding: 15px 0;
+    color: #5B6C8F;
+    display: flex;
+    margin-left: 15px;
+    align-items: center;
+    justify-content: space-between;
+    margin-right: 15px;
+  }
+  
+  .sidebar .navigationBar ul hr {
+    width: 60%;
+    border: 1px solid #5B6C8F;
+  }
+  
+  .sidebar .navigationBar ul li .link{
+    color: #5B6C8F;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.14px;
+    text-decoration: none; 
+    display: block;
+    margin-left: 15px;
+    flex:1;
+  }
+  
+  .sidebar .navigationBar ul li:hover {
+    background: #88CEEF;
+    border-radius: 8px;
+    color: #fff;
+  }
+  
+  .sidebar .navigationBar ul li a:hover {
+    color: #fff;
+  }
+   
