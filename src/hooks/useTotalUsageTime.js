@@ -35,8 +35,8 @@ const useTotalUsageTime = (machineId) => {
                         total += timeDifference;
                     }
                 });
-
-                setTotalTime(total); // Update total time state
+                const roundedTotal = total.toFixed(2);
+                setTotalTime(roundedTotal); // Update total time state with the rounded value
             } catch (err) {
                 setError('Failed to fetch data'); // Handle any errors
             } finally {
