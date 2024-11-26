@@ -13,7 +13,7 @@ html, body {
 /* CSS cho Sidebar */
 .sidebar {
   height: 100%; /* Chiều cao sidebar bằng chiều cao của màn hình */
-  width: 295px; /* Độ rộng của sidebar */
+  width: 280px; /* Độ rộng của sidebar */
   background-color: #fff; /* Màu nền của sidebar */
   padding-top: 20px; /* Khoảng cách trên */
   position: fixed; /* Cố định vị trí sidebar */
@@ -24,9 +24,9 @@ html, body {
 }
 
 /* CSS cho Dashboard */
-.dashboard,.machine-status,.revenue,.user,.change,.alert{
-  margin-left: 295px; /* Đẩy dashboard ra bên phải để không bị chồng lên sidebar */
-  background-color: #A3D3D3; /* Màu nền của dashboard */
+.dashboard,.machine-status,.revenue,.user,.change,.alert,.transactions{
+  margin-left: 280px; /* Đẩy dashboard ra bên phải để không bị chồng lên sidebar */
+  background-color: #F0F8FF; /* Màu nền của dashboard */
   flex: 1; /* Chiếm không gian còn lại */
   overflow-y: auto; /* Cho phép cuộn dọc */
   height: 100vh; /* Chiều cao bằng chiều cao màn hình */

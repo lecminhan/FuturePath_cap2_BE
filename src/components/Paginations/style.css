@@ -1,0 +1,127 @@
+.userlist{
+    width: 940px;
+}
+.table{
+    font-size: 10px; /* Adjust the font size as needed */
+    font-family: Arial, sans-serif; /* Set a default font family */
+    width: 100%; /* Ensure the table takes up full width */
+    border-collapse: collapse; 
+}
+.userlist-table{
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px ;  
+    background-color: #ffffff;
+    
+}
+.transactions-table{
+    width: 98%;
+    border-collapse: collapse;
+    margin-inline: 10px ;  
+    background-color: #ffffff;    
+    justify-content: center;
+    align-items: center;
+}
+
+.transactions-list{
+    background-color: #fff;
+    width: 100%;    
+    padding-top:10px;
+    border-radius: 10px;
+}
+.userlist-table th,td {
+    border: none;
+    padding: padding 5px;
+    text-align: left;
+}
+
+.pagination{
+    display: flex;
+    justify-content: flex-start; /* Căn về góc trái */
+    align-items: center; /* Căn giữa theo chiều dọc */
+    gap: 5px; /* Khoảng cách giữa các nút */
+    margin-top: 10px; /* Khoảng cách phía trên (tùy chọn) */ 
+}
+.chevronStyle{
+    padding: 0 ;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    transition: color 0.3s, transform 0.2s;
+}
+table, th, td {
+    border-left: none;
+    border-right: none;
+  }
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Nền mờ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    text-align: center;
+}
+button {
+    background-color: #fff;
+    border: none;
+    cursor: pointer;
+    float:right;
+}
+
+.input{
+    width: 300px;
+}
+/* Lớp phủ nền */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Form popup */
+.popup-form {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.popup-form h3 {
+    margin-top: 0;
+}
+
+.popup-form label {
+    display: block;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.popup-form input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+

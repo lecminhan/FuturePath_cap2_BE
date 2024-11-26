@@ -1,34 +1,77 @@
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import Sidebar from './components/Sidebar';
-import './App.css';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Revenue from './pages/Revenue';
 import Machine from './pages/Machine';
 import User from './pages/User';
 import Change from './pages/Change';
 import Alert from './pages/Alert';
+import TransactionsPage from './pages/Transactions';
+import LoginPage from './pages/LoginPage/LoginPage';
+import './App.css';
 
-// ... other imports
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    return (
-        <div className="main">
-            <Router>
-            <Sidebar />
-            <div className="content">
-                <Routes>
-                    <Route path="/" element={<Dashboard />} />
-                    <Route path="/revenue" element={<Revenue />} />
-                    <Route path="/machine-status" element={<Machine />} />
-                    <Route path="/revenue" element={<Revenue />} />
-                    <Route path="/user-info" element={<User/>} />
-                    <Route path="/change" element={<Change/>} />
-                    <Route path="/alert" element={<Alert/>} />
-                </Routes>
-            </div>
-        </Router>
+  // Kiểm tra token trong localStorage khi khởi tạo ứng dụng
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  // Hàm xử lý đăng xuất
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');  // Xóa token khỏi localStorage
+    setIsLoggedIn(false);  // Đặt trạng thái đăng nhập thành false
+  };
+
+  const handleLogin = (token) => {
+    localStorage.setItem('authToken', token);
+    setIsLoggedIn(true);
+  };
+
+  return (
+    <div className="main">
+      <Router>
+        {isLoggedIn && <Sidebar />}
+        <div className="content">
+          <Routes>
+            <Route
+              path="/"
+              element={isLoggedIn ? <Dashboard /> : <LoginPage onLogin={handleLogin} />}
+            />
+            <Route
+              path="/revenue"
+              element={isLoggedIn ? <Revenue /> : <LoginPage onLogin={handleLogin} />}
+            />
+            <Route
+              path="/machine-status"
+              element={isLoggedIn ? <Machine /> : <LoginPage onLogin={handleLogin} />}
+            />
+            <Route
+              path="/user-info"
+              element={isLoggedIn ? <User /> : <LoginPage onLogin={handleLogin} />}
+            />
+            <Route
+              path="/change"
+              element={isLoggedIn ? <Change /> : <LoginPage onLogin={handleLogin} />}
+            />
+            <Route
+              path="/alert"
+              element={isLoggedIn ? <Alert /> : <LoginPage onLogin={handleLogin} />}
+            />
+            <Route
+              path="/transactions"
+              element={isLoggedIn ? <TransactionsPage /> : <LoginPage onLogin={handleLogin} />}
+            />
+          </Routes>
         </div>
-    );
+      </Router>
+    </div>
+  );
 }
 
 export default App;

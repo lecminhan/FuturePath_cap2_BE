@@ -6,3 +6,78 @@
     background-color: #fff;
     margin:20px;
 }
+.table-container {
+    width: 100%;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  /* Ẩn đường kẻ dọc của bảng */
+  table, th, td {
+    border-left: none;
+    border-right: none;
+  }
+  input[type="tname-text"],
+  input[type="tname-number"]
+ {
+    width: 100%;
+    padding: 8px;
+    font-size: 16px;
+    border: none;  /* Removes the border */
+    outline: none;  /* Removes the default focus outline */
+    box-sizing: border-box;
+    background-color: #fff; 
+    box-shadow: none;
+  }
+
+
+.btn-wstype {
+  background-color: #88CEEF;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-wstype:hover {
+  background-color: #10CEEF;
+}
+
+.btn-wstype:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  table {
+    font-size: 12px;
+  }
+
+  th, td {
+    padding: 8px;
+  }
+}
+

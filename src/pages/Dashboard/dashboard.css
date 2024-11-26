@@ -16,14 +16,18 @@
 .today-revenue{
     color: #5B6C8F;
 }
-.available{
-    color: #00B087;
+.available {
+    background-color: #d4edda; /* Màu xanh lá */
+    color: #155724;
 }
+.maintenance {
+    background-color: #fff3cd; /* Màu vàng */
+    color: #856404;
+}
+
 .active{
-    color:#2DCA34;
-}
-.maintenance{
-    color: #F9C405;
+    background-color: #cce5ff; /* Màu xanh dương */
+    color: #004085;
 }
 h3{
     font-size: 20px;
@@ -67,12 +71,5 @@ h3{
     display: flex;
     justify-content: space-between;
 }
-.chart-line{
-    width:640px;
-    display: flex;
-    height: 350px;
-}
-.datePicker{
-    margin:10px;
-    margin-bottom: 0;
-}
+
+

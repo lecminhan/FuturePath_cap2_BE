@@ -10,19 +10,59 @@
     display: flex;
 }
 .machine-active{
-   display: flex;
-   width: 920px;
-   height: 400px;
+   width: 940px;
+   height: 600px;
    border-radius: 10px;
    background-color: #fff;
    margin:20px;
 }
 .usage-chart{
     display: flex;
-    width: 920px;
-    height: 320px;
+    width: 940px;
+    height: 450px;;
     border-radius: 10px;
     background-color: #fff;
     margin:20px;
  }
+.section1-machine-active{
+    display: flex; /* Sử dụng Flexbox */
+    justify-content: space-between; /* Đặt khoảng cách giữa các phần tử */
+    align-items: start;
+    padding-bottom: 10px; 
+    height: 40px; 
+    width: 900px;
+}
+.section2-machine-active{
+    padding: 10px;
+}
+.chart-size{
+    width: 900px;;
+}
+.available {
+    background-color: #d4edda; /* Màu xanh lá */
+    color: #155724;
+}
 
+.not-connected {
+    color: #721c24;
+}
+.usagechart-container{
+        width: 90%;
+        height: 400px;
+        margin: 0 auto;
+        padding: 20px;
+}
+.usage-history-list{
+    width: 920px;
+    height: 450px;;
+    border-radius: 10px;
+    background-color: #fff;
+    margin:20px;
+}
+.button-addmachine{
+    float: right;
+    margin-bottom: 20px;
+    cursor: pointer;
+    background:none;
+    border: none;
+}
