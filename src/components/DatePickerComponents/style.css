@@ -1,0 +1,26 @@
+.react-datepicker-wrapper {
+    width: 240px; /* Đặt chiều rộng */
+  }
+  
+  .react-datepicker__input-container input {
+    width: 100%; /* Đảm bảo input bên trong chiếm toàn bộ chiều rộng */
+    height: 40px; /* Đặt chiều cao tự động */
+    padding: 8px;
+    padding-left: 30px; /* Khoảng cách bên trong */
+    font-size: 14px; /* Kích thước chữ */
+    border: 1px solid #ccc; /* Viền mặc định */
+    border-radius: 8px; /* Bo góc */
+    background-color: #fff; /* Màu nền */
+    box-sizing: border-box; /* Đảm bảo padding không phá layout */
+  }
+  
+  .react-datepicker__input-container input::placeholder {
+    color: #aaa; /* Màu placeholder */
+  }
+  
+  .react-datepicker__input-container input:focus {
+    outline: none; /* Xóa viền mặc định khi focus */
+    border-color: #007bff; /* Màu viền khi focus */
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.5); /* Hiệu ứng bóng khi focus */
+  }
+  

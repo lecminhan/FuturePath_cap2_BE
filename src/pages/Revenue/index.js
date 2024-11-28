@@ -6,13 +6,16 @@ import SearchBar from '../../components/Search';
 import RMachinepaginations from '../../components/Paginations/revenueMachinePaginations';
 import { Navigate, useNavigate } from 'react-router-dom';
 import { Line } from 'react-chartjs-2';
-import useTotalRevenue from '../../hooks/useTotalRevenue';
+import useTotalRevenue from '../../hooks/useRevenueData';
 import useRecentTransactions from '../../hooks/useRecentTransactions';
 
 import CostChart from '../../components/ChartComponents/RevenueChart';
+import RevenueDatePicker from '../../components/DatePickerComponents';
 
 function Revenue(){
-    const { totalRevenue, loading: loadingRevenue, error: errorRevenue } = useTotalRevenue();
+    const [totalRevenue, setTotalRevenue] = useState(null); // Dữ liệu doanh thu
+    const [loadingRevenue, setLoadingRevenue] = useState(false); // Loading state
+    const [errorRevenue, setErrorRevenue] = useState(null); // Error state
     const { userTransactions, loading: loadingTransactions, error: errorTransactions } = useRecentTransactions();
     const navigate = useNavigate();
     if (loadingRevenue || loadingTransactions) {
@@ -26,6 +29,23 @@ function Revenue(){
             </div>
         );
     }
+    const handleDateRangeChange = (revenueData) => {
+        setTotalRevenue(revenueData);
+      };
+    
+      // Kiểm tra nếu đang loading hoặc có lỗi
+      if (loadingRevenue) {
+        return <div>Loading...</div>;
+      }
+    
+      if (errorRevenue) {
+        return (
+          <div>
+            <p>Error: {errorRevenue}</p>
+          </div>
+        );
+      }
+    
     return(
         <div className="revenue">
             <div className='header'>
@@ -35,12 +55,29 @@ function Revenue(){
             <div className="section-left">
                 <div className="table1 box">
                     <div className='DatePicker'>
-                        <DatePicker/>
+                    <RevenueDatePicker onDateRangeChange={handleDateRangeChange} />
                     </div>
                 </div>
                 <div className="table2 box">
-                        <div style={{textAlign:'center', fontSize:'20px', fontWeight:600, color:'#5B6C8F'}}>Tổng doanh thu</div>
-                        <div style={{textAlign:'center', fontSize:'25px',color:'#5B6C8F' }}>{totalRevenue} VND</div>
+                <div
+              style={{
+                textAlign: "center",
+                fontSize: "20px",
+                fontWeight: 600,
+                color: "#5B6C8F",
+              }}
+            >
+              Tổng doanh thu
+            </div>
+            <div
+              style={{
+                textAlign: "center",
+                fontSize: "25px",
+                color: "#5B6C8F",
+              }}
+            >
+              {totalRevenue ? totalRevenue + " VND" : "Chưa có dữ liệu"}
+              </div>
                 </div>
                 <div className="table3 box">
                 <div className='title-recentrans'> Giao dịch gần đây</div>

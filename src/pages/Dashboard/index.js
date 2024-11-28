@@ -5,17 +5,18 @@ import NotificationIcons from '../../components/Notifications';
 import React, { useEffect, useState } from 'react';
 import StatusComponent from '../../components/StatusComponent/StatusComponents';
 import CombinedChart from '../../components/ChartComponents/combinedChart';
-import useTotalRevenue from '../../hooks/useTotalRevenue';
 import useRecentTransactions from '../../hooks/useRecentTransactions';
-
+import useTotalRevenue from "../../hooks/useTotalRevenue";
 function Dashboard() {
-    const { totalRevenue, loading: loadingRevenue, error: errorRevenue } = useTotalRevenue();
+    const [loadingRevenue, setLoadingRevenue] = useState(false); // Loading state
+    const [errorRevenue, setErrorRevenue] = useState(null); // Error state
     const { userTransactions, loading: loadingTransactions, error: errorTransactions } = useRecentTransactions();
-
+    const { totalRevenue, loading, error } = useTotalRevenue();
     if (loadingRevenue || loadingTransactions) {
         return <div>Loading...</div>;
     }
-
+    if (loading) return <p>Loading revenue data...</p>;
+    if (error) return <p>Error: {error}</p>;
     if (errorRevenue || errorTransactions) {
         return (
             <div>
@@ -23,7 +24,8 @@ function Dashboard() {
             </div>
         );
     }
-
+    
+    
     return (
         <>
             <div className='dashboard'>
@@ -35,7 +37,7 @@ function Dashboard() {
                 <div className='section1'>
                     <div className='today-revenue box-color'>
                         <h3>Tổng doanh thu</h3>
-                        <p>{totalRevenue} VND</p>
+                        <p>  <p>{totalRevenue ? `${totalRevenue}` : "No revenue data available."}</p> </p>
                     </div>
                     <StatusComponent className='available box-color' />
                     <StatusComponent className='active box-color' />

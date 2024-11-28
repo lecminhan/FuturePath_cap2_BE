@@ -1,48 +1,56 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-const useTotalRevenue = (selectedDate) => {
-  const [totalRevenue, setTotalRevenue] = useState(0);
+const useTotalRevenue = () => {
+  const [totalRevenue, setTotalRevenue] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const API_HOST = process.env.REACT_APP_API_HOST;
-  const token = localStorage.getItem('authToken');
-  
-  useEffect(() => {
-    const fetchRevenue = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`${API_HOST}/api/usage-histories`, {
+  // Helper function to get the first and last days of the current month
+  const getCurrentMonthDates = () => {
+    const today = new Date();
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    return { firstDayOfMonth, lastDayOfMonth };
+  };
+
+  const fetchTotalRevenue = async (start, end) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await axios.get(
+        `${API_HOST}/api/usage-histories/total-revenue?start=${start}&end=${end}`,
+        {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
           },
-        });
+        }
+      );
 
-        // Filter data by the selected date
-        const filteredData = response.data.filter(item => {
-          const usageDate = new Date(item.startTime); // Assuming startTime is a timestamp or a valid date
-          return (
-            usageDate.toDateString() === new Date(selectedDate).toDateString()
-          );
-        });
+      setTotalRevenue(response.data);
+    } catch (err) {
+      setError("Failed to fetch revenue data");
+      console.error("Error fetching total revenue:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        // Calculate total revenue for the selected date
-        const revenue = filteredData
-          ? filteredData.reduce((sum, item) => sum + (parseFloat(item.cost) || 0), 0).toFixed(0)
-          : 0;
-        
-        setTotalRevenue(revenue); // Update total revenue
-      } catch (err) {
-        setError('Failed to fetch data');
-      } finally {
-        setLoading(false);
-      }
-    };
+  useEffect(() => {
+    const { firstDayOfMonth, lastDayOfMonth } = getCurrentMonthDates();
 
-    fetchRevenue();
-  }, [selectedDate, token]); // Run when selectedDate or token changes
+    const start = `${firstDayOfMonth.toISOString().split("T")[0]}T00:00:00`;
+    const end = `${lastDayOfMonth.toISOString().split("T")[0]}T23:59:59`;
 
-  return { totalRevenue, loading, error };
+    fetchTotalRevenue(start, end);
+  }, [API_HOST]); // Re-runs only if API_HOST changes
+
+  return {
+    totalRevenue,
+    loading,
+    error,
+  };
 };
 
 export default useTotalRevenue;

@@ -9,7 +9,9 @@ html, body {
   height: 100vh; /* Chiều cao bằng chiều cao màn hình */
   overflow: hidden; /* Ẩn thanh cuộn của container */
 }
-
+.hidden {
+  display: none;
+}
 /* CSS cho Sidebar */
 .sidebar {
   height: 100%; /* Chiều cao sidebar bằng chiều cao của màn hình */

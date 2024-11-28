@@ -31,12 +31,10 @@ function Userpaginations() {
                 <thead>
                     <tr>
                         <th>Id</th>
-                        <th>Ngày tạo</th>
                         <th>Tên người dùng</th>
                         <th>Email</th>
                         <th>Phone</th>
                         <th>Số dư</th>
-                        <th>Đăng nhập lần cuối </th>
                         <th></th>
                     </tr>
                 </thead>
@@ -44,12 +42,10 @@ function Userpaginations() {
                     {currentItems.map((data) => (
                         <tr key={data.id}>
                             <td>{data.id}</td>
-                            <td>{formatDate(data.createdAt)}</td>
                             <td>{data.username}</td>
                             <td>{data.email}</td>
                             <td>{data.phone}</td>
                             <td>{data.balance}</td>
-                            <td>{formatDate(data.lastLoginAt)}</td>
                             <td>xóa</td>
                         </tr>
                     ))}

@@ -4,6 +4,7 @@ import TransactionPaginations from '../../components/Paginations/transactionsPag
 import style from './style.css'
 import SearchBar from '../../components/Search';
 import NotificationIcons from '../../components/Notifications';
+import DatePicker from '../../components/DatePickerComponents';
 import { Undo2 } from 'lucide-react';
 function TransactionsPage() {
     const navigate = useNavigate();
@@ -11,7 +12,7 @@ function TransactionsPage() {
     return (
         <div className='transactions'>
             <div className='top-header'>
-                    <div> <SearchBar/></div>
+                    <div></div>
                     <div ><NotificationIcons/></div>
                 </div>
             
