@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { ref, onValue } from 'firebase/database';
-import { realtimeDB } from '../FirebaseConfig';  // Điều chỉnh đường dẫn import nếu cần
+import { useState, useEffect } from "react";
+import { ref, onValue } from "firebase/database";
+import { realtimeDB } from "../FirebaseConfig"; // Điều chỉnh đường dẫn import nếu cần
 
 const useMachineStatus = (machineId) => {
   const [status, setStatus] = useState(null);
@@ -9,7 +9,6 @@ const useMachineStatus = (machineId) => {
 
   useEffect(() => {
     const statusRef = ref(realtimeDB, `machines/${machineId}/status`); // Đường dẫn đúng đến trạng thái máy giặt
-
     // Lắng nghe sự thay đổi trong trạng thái của máy giặt
     const unsubscribe = onValue(
       statusRef,
@@ -22,7 +21,7 @@ const useMachineStatus = (machineId) => {
         setLoading(false); // Đã hoàn thành việc lấy dữ liệu
       },
       (err) => {
-        setError('Không thể lấy trạng thái máy');
+        setError("Không thể lấy trạng thái máy");
         console.error(err);
         setLoading(false);
       }

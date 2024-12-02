@@ -124,4 +124,10 @@ button {
     border: 1px solid #ccc;
     border-radius: 4px;
 }
-
+th, td {
+    width: 150px; /* Đặt chiều rộng cố định cho th và td */
+    overflow: hidden;  /* Ẩn phần nội dung vượt quá */
+    white-space: nowrap; /* Ngăn không cho nội dung xuống dòng */
+    text-overflow: ellipsis; /* Hiển thị dấu '...' nếu nội dung quá dài */
+    box-sizing: border-box; 
+}

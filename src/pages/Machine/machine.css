@@ -11,7 +11,7 @@
 }
 .machine-active{
    width: 940px;
-   height: 600px;
+   height: 640px;
    border-radius: 10px;
    background-color: #fff;
    margin:20px;
@@ -24,14 +24,6 @@
     background-color: #fff;
     margin:20px;
  }
-.section1-machine-active{
-    display: flex; /* Sử dụng Flexbox */
-    justify-content: space-between; /* Đặt khoảng cách giữa các phần tử */
-    align-items: start;
-    padding-bottom: 10px; 
-    height: 40px; 
-    width: 900px;
-}
 .section2-machine-active{
     padding: 10px;
 }
@@ -61,7 +53,6 @@
 }
 .button-addmachine{
     float: right;
-    margin-bottom: 20px;
     cursor: pointer;
     background:none;
     border: none;

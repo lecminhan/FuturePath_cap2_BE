@@ -1,214 +1,337 @@
-import React, { useState } from 'react';
-import { ChevronRight, ChevronLeft, CircleX, Pen } from 'lucide-react';
-import useMachineListTable from '../../hooks/useMachineListTable';
-import useDeleteMachine from '../../hooks/useDeleteMachines';
-import useTotalUsageTime from '../../hooks/useTotalUsageTime';
-import useUpdateMachineName from '../../hooks/useUpdateMachineName';
-import useMachineStatus from '../../hooks/useMachineStatus'; // Ensure this hook is imported correctly
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import {
+  ChevronRight,
+  ChevronLeft,
+  CircleX,
+  Pen,
+  Check,
+  X,
+} from "lucide-react";
+import useMachineListTable from "../../hooks/useMachineListTable";
+import useDeleteMachine from "../../hooks/useDeleteMachines";
+import useUpdateMachineName from "../../hooks/useUpdateMachineName";
+import useLocations from "../../hooks/useLocations";
+import useFirebaseMachineStatus from "../../hooks/useFirebaseMachineStatus";
+import useTotalUsageTime from "../../hooks/useTotalUsageTime";
+import useMachineStatus from "../../hooks/useMachineStatus";
 
 function Machinepaginations() {
-    const {
-        currentItems,
-        currentPage,
-        totalPages,
-        loading,
-        error,
-        handlePageChange,
-    } = useMachineListTable();
+  const {
+    currentItems,
+    currentPage,
+    totalPages,
+    loading,
+    error,
+    handlePageChange,
+  } = useMachineListTable();
+  const [statusFilter, setStatusFilter] = useState(""); // Selected status
+  const [filteredMachines, setFilteredMachines] = useState([]); // Filtered machines list
 
-    const { deleteMachine, deleteloading, deleteerror } = useDeleteMachine();
+  const { deleteMachine, deleteloading, deleteerror } = useDeleteMachine();
+  const {
+    updateMachine,
+    loading: updateLoading,
+    error: updateError,
+  } = useUpdateMachineName();
+  const {
+    locations,
+    loading: locationsLoading,
+    error: locationsError,
+  } = useLocations();
+  const firebaseStatus = useFirebaseMachineStatus(currentItems); // Firebase status data
 
-    const handleDelete = async (machineId) => {
-        if (deleteloading) {
-            alert('Đang xoá máy, vui lòng đợi...');
-            return;
-        }
-        const result = await deleteMachine(machineId, () => {
-            alert('Xoá máy giặt thành công!');
-            window.location.reload(); // Reload page after successful deletion
-        });
+  // Handle delete machine
+  const handleDelete = async (machineId) => {
+    if (deleteloading) return alert("Đang xoá máy, vui lòng đợi...");
+    const result = await deleteMachine(machineId);
+    if (!result.success)
+      return alert(deleteerror || "Có lỗi khi xoá máy giặt.");
+    alert("Xoá máy giặt thành công!");
+    window.location.reload();
+  };
 
-        if (!result.success) {
-            alert(deleteerror || 'Có lỗi khi xoá máy giặt.');
-        }
+  // State for editing machine
+  const [editingMachineId, setEditingMachineId] = useState(null);
+  const [editableData, setEditableData] = useState({});
+
+  // Handle edit click
+  const handleEditClick = (machine) => {
+    setEditingMachineId(machine.id);
+    setEditableData({ ...machine });
+  };
+
+  // Handle input change
+  const handleInputChange = (field, value) => {
+    setEditableData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  // Save changes
+  const handleSaveClick = async () => {
+    try {
+      await updateMachine(editingMachineId, editableData);
+      alert("Cập nhật thành công!");
+      setEditingMachineId(null);
+      window.location.reload(); // Optional: Better to refetch data
+    } catch (error) {
+      alert("Có lỗi khi cập nhật dữ liệu.");
+    }
+  };
+
+  // Cancel editing
+  const handleCancelClick = () => {
+    setEditingMachineId(null);
+    setEditableData({});
+  };
+
+  // Get status text based on the status code
+  const getStatusText = (status) => {
+    const statusMap = {
+      AVAILABLE: "Sẵn sàng",
+      IN_USE: "Đang chạy",
+      MAINTENANCE: "Bảo trì",
+      ERROR: "Lỗi",
     };
+    return statusMap[status] || "Sẵn sàng";
+  };
 
-    // Component xử lý tổng thời gian sử dụng của máy
-    const MachineUsage = ({ machineId }) => {
-        const { totalTime, loading, error } = useTotalUsageTime(machineId);
+  // Update machine status with firebase data
+  useEffect(() => {
+    if (currentItems.length > 0 && firebaseStatus.length > 0) {
+      const combinedData = currentItems.map((machine) => {
+        const status = firebaseStatus.find(
+          (status) => status.machineId === machine.id
+        );
+        return { ...machine, status: status ? status.status : "unknown" };
+      });
+      setFilteredMachines(combinedData);
+    }
+  }, [currentItems, firebaseStatus]);
 
-        // Tránh giật giật và hiển thị thông báo khi đang tải hoặc có lỗi
-        if (loading) return <span>Đang tải...</span>;
-        if (error) return <span>Lỗi: {error}</span>;
+  // Filter machines by status
+  useEffect(() => {
+    if (statusFilter) {
+      setFilteredMachines((prevMachines) =>
+        prevMachines.filter((machine) => machine.status === statusFilter)
+      );
+    } else {
+      setFilteredMachines(
+        currentItems.map((machine) => ({
+          ...machine,
+          status:
+            firebaseStatus.find((status) => status.machineId === machine.id)
+              ?.status || "unknown",
+        }))
+      );
+    }
+  }, [statusFilter, currentItems, firebaseStatus]);
 
-        return <span>{totalTime} giờ</span>;
-    };
+  const handleFilterChange = (e) => setStatusFilter(e.target.value);
 
-    // Xử lý chỉnh sửa tên máy
-    const [editingNameId, setEditingNameId] = useState(null);
-    const [nameEdit, setNameEdit] = useState('');
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const { updateMachineName } = useUpdateMachineName();
-    const handleEditClick = (id, currentName) => {
-        setEditingNameId(id);
-        setNameEdit(currentName);
-        setIsModalOpen(true);
-    };
+  if (loading) return <p>Đang tải dữ liệu máy giặt...</p>;
+  if (error) return <p>{error}</p>;
 
-    const handleSaveClick = async () => {
-        if (editingNameId && nameEdit) {
-            await updateMachineName(editingNameId, nameEdit);
-            setIsModalOpen(false);
-            window.location.reload(); // Refresh the page to update the list
-        }
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setEditingNameId(null);
-    };
-
-    // Refactor: Get the status of the machine from Firebase
-    const getStatusText = (status) => {
-        switch (status) {
-            case 'AVAILABLE':
-                return 'Sẵn sàng';
-            case 'IN_USE':
-                return 'Đang chạy';
-            case 'MAINTENANCE':
-                return 'Bảo trì';
-            default:
-                return 'Sẵn sàng'; // Trả về trạng thái mặc định nếu không khớp
-        }
-    };
-
-    return (
-        <div>
-            <table className="machines-list-table">
-                <thead>
-                    <tr>
-                        <th>Mã số máy</th>
-                        <th>Tên Máy</th>
-                        <th>Model</th>
-                        <th>Dung tích</th>
-                        <th>Trạng thái</th>
-                        <th>Địa điểm</th>
-                        <th>Tổng thời gian</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {currentItems.map((data) => (
-                        <tr key={data.id}>
-                            <td>
-                                {data.id}
-                                <button
-                                    onClick={() => handleDelete(data.id)}
-                                    disabled={deleteloading}
-                                    className="deleteMachineButton"
-                                    style={{
-                                        backgroundColor: '#fff',
-                                        border: 0,
-                                        float: 'right',
-                                        cursor: 'pointer',
-                                    }}
-                                >
-                                    <CircleX size={20}/>
-                                </button>
-                            </td>
-                            <td>
-                                {data.name}
-                                <button onClick={() => handleEditClick(data.id, data.name)}>
-                                    <Pen size={18}/>
-                                </button>
-                            </td>
-                            <td>{data.model}</td>
-                            <td>{data.capacity} L</td>
-                            <td>
-                                <MachineStatus machineId={data.id} getStatusText={getStatusText} />
-                            </td>
-                            <td>
-                                {data.locationName},<br /> {data.locationAddress}
-                            </td>
-                            <td>
-                                <MachineUsage machineId={data.id} />
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-
-            {/* Modal Pop-up */}
-            {isModalOpen && (
-                <div className="modal-overlay">
-                    <div className="modal-content">
-                        <h3>Sửa tên máy</h3>
-                        <input
-                            type="text"
-                            value={nameEdit}
-                            onChange={(e) => setNameEdit(e.target.value)}
-                            style={{ width: '350px', marginBottom: '10px' }}
-                        />
-                        <div>
-                            <button onClick={() => handleSaveClick(editingNameId)}>Lưu</button>
-                            <button onClick={closeModal}>Hủy</button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            <div className="pagination">
-                <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    style={{
-                        border: 0,
-                        borderRadius: 10,
-                        backgroundColor: '#fff',
-                        padding: '5px 10px',
-                    }}
-                >
-                    <ChevronLeft className="chevronStyle" />
-                </button>
-                {Array.from({ length: totalPages }, (_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => handlePageChange(index + 1)}
-                        style={{
-                            border: 0,
-                            backgroundColor: currentPage === index + 1 ? '#f0f0f0' : '#fff',
-                            padding: '5px 10px',
-                            borderRadius: 10,
-                        }}
-                    >
-                        {index + 1}
-                    </button>
-                ))}
-                <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    style={{
-                        border: 0,
-                        borderRadius: 10,
-                        backgroundColor: '#fff',
-                        padding: '5px 10px',
-                    }}
-                >
-                    <ChevronRight className="chevronStyle" />
-                </button>
-            </div>
-        </div>
-    );
+  return (
+    <div>
+      <div>
+        <h2>Lọc trạng thái máy giặt</h2>
+        <select onChange={handleFilterChange} value={statusFilter}>
+          <option value="">Tất cả trạng thái</option>
+          <option value="AVAILABLE">Sẵn sàng</option>
+          <option value="IN_USE">Đang sử dụng</option>
+          <option value="MAINTENANCE">Bảo trì</option>
+          <option value="ERROR">Lỗi</option>
+        </select>
+      </div>
+      <table className="machines-list-table">
+        <thead>
+          <tr>
+            <th>Mã số máy</th>
+            <th>Tên Máy</th>
+            <th>Model</th>
+            <th>Dung tích</th>
+            <th>Trạng thái</th>
+            <th>Địa điểm</th>
+            <th>Tổng thời gian</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredMachines.length === 0 ? (
+            <tr>
+              <td colSpan="8" style={{ textAlign: "center" }}>
+                Không có máy giặt với trạng thái này.
+              </td>
+            </tr>
+          ) : (
+            filteredMachines.map((machine) => (
+              <tr key={machine.id}>
+                {editingMachineId === machine.id ? (
+                  <>
+                    <td>{machine.id}</td>
+                    <td>
+                      <input
+                        style={{ width: "60px", fontSize: "14px" }}
+                        type="text"
+                        value={editableData.name}
+                        onChange={(e) =>
+                          handleInputChange("name", e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        style={{ width: "60px", fontSize: "14px" }}
+                        type="text"
+                        value={editableData.model}
+                        onChange={(e) =>
+                          handleInputChange("model", e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="number"
+                        value={editableData.capacity}
+                        onChange={(e) =>
+                          handleInputChange("capacity", e.target.value)
+                        }
+                      />
+                    </td>
+                    <td>
+                      <MachineStatus
+                        machineId={machine.id}
+                        getStatusText={getStatusText}
+                      />
+                    </td>
+                    <td>
+                      {locationsLoading ? (
+                        <span>Đang tải danh sách địa điểm...</span>
+                      ) : locationsError ? (
+                        <span>Lỗi: {locationsError}</span>
+                      ) : (
+                        <select
+                          style={{ width: "140px" }}
+                          value={editableData.locationId || ""}
+                          onChange={(e) =>
+                            handleInputChange("locationId", e.target.value)
+                          }
+                        >
+                          <option value="" disabled>
+                            Chọn địa điểm
+                          </option>
+                          {locations.map((loc) => (
+                            <option key={loc.id} value={loc.id}>
+                              {loc.name} ({loc.address})
+                            </option>
+                          ))}
+                        </select>
+                      )}
+                    </td>
+                    <td>
+                      <MachineUsage machineId={machine.id} />
+                    </td>
+                    <td>
+                      <button
+                        onClick={handleSaveClick}
+                        disabled={updateLoading}
+                      >
+                        <Check size={18} /> Lưu
+                      </button>
+                      <button onClick={handleCancelClick}>
+                        <X size={18} /> Hủy
+                      </button>
+                    </td>
+                  </>
+                ) : (
+                  <>
+                    <td>{machine.id}</td>
+                    <td>{machine.name}</td>
+                    <td>{machine.model}</td>
+                    <td>{machine.capacity} L</td>
+                    <td>
+                      <MachineStatus
+                        machineId={machine.id}
+                        getStatusText={getStatusText}
+                      />
+                    </td>
+                    <td>
+                      {machine.locationName},<br />
+                      {machine.locationAddress}
+                    </td>
+                    <td>
+                      <MachineUsage machineId={machine.id} />
+                    </td>
+                    <td>
+                      <button onClick={() => handleEditClick(machine)}>
+                        <Pen size={18} /> Sửa
+                      </button>
+                      <button
+                        onClick={() => handleDelete(machine.id)}
+                        disabled={deleteloading}
+                        className="deleteMachineButton"
+                      >
+                        <CircleX size={18} /> Xóa
+                      </button>
+                    </td>
+                  </>
+                )}
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        handlePageChange={handlePageChange}
+      />
+    </div>
+  );
 }
 
-// New component for displaying the machine status
+const Pagination = ({ currentPage, totalPages, handlePageChange }) => (
+  <div className="pagination">
+    <button
+      onClick={() => handlePageChange(currentPage - 1)}
+      disabled={currentPage === 1}
+    >
+      <ChevronLeft />
+    </button>
+    {Array.from({ length: totalPages }, (_, index) => (
+      <button
+        key={index}
+        onClick={() => handlePageChange(index + 1)}
+        style={{ fontWeight: currentPage === index + 1 ? "bold" : "normal" }}
+      >
+        {index + 1}
+      </button>
+    ))}
+    <button
+      onClick={() => handlePageChange(currentPage + 1)}
+      disabled={currentPage === totalPages}
+    >
+      <ChevronRight />
+    </button>
+  </div>
+);
+
 const MachineStatus = ({ machineId, getStatusText }) => {
-    const { status, loading, error } = useMachineStatus(machineId);
+  const { status, loading, error } = useMachineStatus(machineId);
 
-    if (loading) return <span>Đang tải...</span>;
-    if (error) return <span>Lỗi: {error}</span>;
+  if (loading) return <span>Đang tải...</span>;
+  if (error) return <span>Lỗi: {error}</span>;
 
-    return <span>{getStatusText(status)}</span>;
+  return <span>{getStatusText(status)}</span>;
+};
+
+const MachineUsage = ({ machineId }) => {
+  const { totalTime, loading, error } = useTotalUsageTime(machineId);
+
+  // Tránh giật giật và hiển thị thông báo khi đang tải hoặc có lỗi
+  if (loading) return <span>Đang tải...</span>;
+  if (error) return <span>Lỗi: {error}</span>;
+
+  return <span>{totalTime} giờ</span>;
 };
 
 export default Machinepaginations;

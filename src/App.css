@@ -26,7 +26,7 @@ html, body {
 }
 
 /* CSS cho Dashboard */
-.dashboard,.machine-status,.revenue,.user,.change,.alert,.transactions{
+.dashboard,.machine-status,.revenue,.user,.change,.alert,.transactions,.locations{
   margin-left: 280px; /* Đẩy dashboard ra bên phải để không bị chồng lên sidebar */
   background-color: #F0F8FF; /* Màu nền của dashboard */
   flex: 1; /* Chiếm không gian còn lại */

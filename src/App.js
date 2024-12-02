@@ -10,6 +10,7 @@ import Alert from './pages/Alert';
 import TransactionsPage from './pages/Transactions';
 import LoginPage from './pages/LoginPage/LoginPage';
 import './App.css';
+import Locations from './pages/Locations/locations';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -66,6 +67,10 @@ function App() {
             <Route
               path="/transactions"
               element={isLoggedIn ? <TransactionsPage /> : <LoginPage onLogin={handleLogin} />}
+            />
+               <Route
+              path="/locations"
+              element={isLoggedIn ? <Locations/> : <LoginPage onLogin={handleLogin} />}
             />
           </Routes>
         </div>

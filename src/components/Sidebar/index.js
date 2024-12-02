@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Bolt, LayoutDashboard, WashingMachine, ArrowLeftRight, UsersRound, SquarePen, OctagonAlert, ChevronRight, Settings } from 'lucide-react';
+import { Bolt, LayoutDashboard, WashingMachine, ArrowLeftRight, UsersRound, SquarePen, OctagonAlert, ChevronRight, MapPinPlus } from 'lucide-react';
 import './style.css';
 
 function Sidebar() {
@@ -58,6 +58,11 @@ function Sidebar() {
             <ChevronRight />
           </li>
           <li>
+            <MapPinPlus/>
+            <Link to="/locations" className="link">Quản lý địa điểm</Link>
+            <ChevronRight />
+          </li>
+          <li>
             <OctagonAlert />
             <Link to="/alert" className="link">Thông báo</Link>
             <ChevronRight />
@@ -68,7 +73,6 @@ function Sidebar() {
         </ul>
       </div>
 
-      {/* Modal xác nhận đăng xuất */}
       {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal">
