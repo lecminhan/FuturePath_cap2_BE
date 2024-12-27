@@ -124,6 +124,21 @@ function Userpaginations() {
     { field: "email", headerName: "Email", width: 200 },
     { field: "phone", headerName: "Số điện thoại", width: 160 },
     { field: "balance", headerName: "Số dư", width: 130 },
+    {
+      field: "isActive",
+      headerName: "Trạng thái",
+      width: 150,
+      renderCell: (params) => (
+        <Typography
+          sx={{
+            fontWeight: "bold",
+            color: params.value === true ? "green" : "red",
+          }}
+        >
+          {params.value === true ? "Đang hoạt động" : "Bị khóa"}
+        </Typography>
+      ),
+    },
     ...(roleName === "ROLE_ADMIN"
       ? [
           {
