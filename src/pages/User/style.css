@@ -1,9 +1,15 @@
 
 .user-table{
    display: flex;
-   width: 960px;
-   height: 600px;
    border-radius: 10px;
-   background-color: #fff;
    margin:20px;
 }
+.user-table {
+   flex-grow: 1;
+ }
+ 
+ .button_add_user {
+   margin-top: 20px; /* Ensure 20px spacing below Userpaginations */
+   display: flex;
+   justify-content: center; /* Center the button horizontally if needed */
+ }

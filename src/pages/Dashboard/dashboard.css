@@ -1,75 +1,156 @@
-
+/* Thêm hiệu ứng hover cho các phần tử trong section1 */
 .section1 {
     display: flex;
     justify-content: space-between;
-    margin:20px
+    margin: 20px;
+    transition: all 0.3s ease; /* Thêm hiệu ứng mượt mà cho cả section */
 }
-.box-color{
+
+.box-color {
     background: #fff;
     border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Thêm hiệu ứng cho box */
 }
+
+.box-color:hover {
+    transform: translateY(-5px); /* Đẩy lên khi hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm đổ bóng */
+}
+
 .today-revenue, .available, .active, .maintenance {
     width: 224px;
-    height: 129px;
+    height: 120px;
     flex-shrink: 0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Thêm hiệu ứng hover cho các phần tử này */
 }
-.today-revenue{
+
+.today-revenue {
     color: #5B6C8F;
 }
+
 .available {
     background-color: #d4edda; /* Màu xanh lá */
     color: #155724;
 }
+
 .maintenance {
     background-color: #fff3cd; /* Màu vàng */
     color: #856404;
 }
 
-.active{
+.active {
     background-color: #cce5ff; /* Màu xanh dương */
     color: #004085;
 }
-h3{
+
+/* Hiệu ứng hover cho các box-color */
+.today-revenue:hover, .available:hover, .maintenance:hover, .active:hover {
+    transform: translateY(-5px); /* Đẩy lên khi hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm đổ bóng khi hover */
+}
+
+/* Thêm hiệu ứng cho tiêu đề */
+h3 {
     font-size: 20px;
     text-align: center;
     margin-bottom: 0;
 }
-.box-color p{
+
+.box-color p {
     font-size: 35px;
     text-align: center;
     margin: 0;
     font-weight: 500;
 }
-.title-recentrans{
+
+/* Cập nhật hiệu ứng cho tiêu đề giao dịch gần đây */
+.title-recentrans {
     font-size: 20px;
     text-align: center;
     margin-bottom: 0;
     color: #5B6C8F;
     font-weight: 500;
 }
-.content-recentrans{
+
+/* Hiệu ứng hover cho danh sách giao dịch gần đây */
+.content-recentrans {
     margin-top: 0;
     list-style-type: none;
-    padding:0;
+    padding: 0;
     margin: 0;
 }
-.section2{
+
+.content-recentrans li {
+    transition: transform 0.3s ease, background-color 0.3s ease; /* Thêm hiệu ứng hover cho các mục trong danh sách */
+}
+
+.content-recentrans li:hover {
+    transform: translateY(-3px); /* Đẩy lên khi hover */
+    background-color: #f1f1f1; /* Thêm màu nền khi hover */
+}
+
+/* Thêm hiệu ứng cho phần section2 */
+.section2 {
     display: flex;
     justify-content: space-between;
+    transition: all 0.3s ease; /* Thêm hiệu ứng hover cho toàn bộ section2 */
 }
-.chart{
+
+.chart {
     width: 672px;
-    height:367px;
-    margin:0 10px 0 20px;
+    height: 367px;
+    margin: 0 10px 0 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Thêm hiệu ứng cho chart */
 }
-.r-transactions{
+
+.chart:hover {
+    transform: translateY(-5px); /* Đẩy lên khi hover */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Thêm đổ bóng khi hover */
+}
+
+.r-transactions {
     width: 250px;
     height: 367px;
     margin-right: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Thêm hiệu ứng cho r-transactions */
 }
-.top-header{
+
+
+/* Hiệu ứng cho phần header */
+.top-header {
     display: flex;
     justify-content: space-between;
+    transition: all 0.3s ease; /* Thêm hiệu ứng hover cho toàn bộ header */
 }
 
-
+/* MapBox phần tử được giấu */
+div[mapboxgl-children] {
+    display: none;
+}
+/* Thêm hiệu ứng cho phần Tổng doanh thu */
+.total-revenue-box {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  /* Hiệu ứng hover khi người dùng di chuột vào */
+  .total-revenue-box:hover {
+    transform: translateY(-5px); /* Đẩy lên khi hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Thêm đổ bóng mạnh hơn khi hover */
+  }
+  
+  .total-revenue-box h6 {
+    color: #333333;
+  }
+  
+  .total-revenue-box p {
+    font-size: 35px;
+    font-weight: 500;
+    color: #333333;
+    margin: 0;
+  }
+  

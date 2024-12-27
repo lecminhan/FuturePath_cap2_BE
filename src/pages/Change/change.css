@@ -1,10 +1,11 @@
 .change-table{
-    display: flex;
-    width: 935px;
-    height: 400px;
-    border-radius: 10px;
-    background-color: #fff;
-    margin:20px;
+  background-color: #fff;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+}
+.change-table-container{
+  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 .table-container {
     width: 100%;
@@ -28,14 +29,11 @@
   }
   
   th {
-    background-color: #f4f4f4;
+    background-color: #f0f4f8;
     font-weight: bold;
+    color:#333333 ;
   }
   /* Ẩn đường kẻ dọc của bảng */
-  table, th, td {
-    border-left: none;
-    border-right: none;
-  }
   input[type="tname-text"],
   input[type="tname-number"]
  {
@@ -64,7 +62,9 @@
 .btn-wstype:hover {
   background-color: #10CEEF;
 }
-
+td {
+  color: #333333;
+}
 .btn-wstype:disabled {
   background-color: #ccc;
   cursor: not-allowed;

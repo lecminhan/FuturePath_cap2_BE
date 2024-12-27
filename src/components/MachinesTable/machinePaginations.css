@@ -1,0 +1,95 @@
+/* Căn giữa văn bản trong tất cả các ô của DataGrid */
+.MuiDataGrid-cell {
+    display: flex;
+    justify-content: center;  /* Căn giữa theo chiều ngang */
+    align-items: center;      /* Căn giữa theo chiều dọc */
+    text-align: center;       /* Căn giữa text theo chiều ngang */
+  }
+  
+  /* Căn giữa văn bản trong tiêu đề các cột */
+  .MuiDataGrid-columnHeaderTitle {
+    display: flex;
+    justify-content: center;  /* Căn giữa tiêu đề cột */
+    align-items: center;
+    text-align: center;
+  }
+  
+  /* Căn giữa văn bản trong các ô trạng thái */
+  .status-text {
+    width: 100px;
+    display: flex;
+    justify-content: center;  /* Căn giữa theo chiều ngang */
+    align-items: center;      /* Căn giữa theo chiều dọc */
+    height: 80%;              /* Đảm bảo chiều cao phù hợp */
+    text-align: center;       /* Căn giữa text theo chiều ngang */
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
+  /* Căn giữa các phần tử trong filter Select */
+  .MuiSelect-root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Căn giữa phần nội dung của pagination */
+  .MuiPagination-root {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+  }
+  .MuiDataGrid-root {
+    background-color: white !important;  /* Nền bảng trắng */
+  }
+  
+  /* Đặt nền cho các ô dữ liệu của bảng */
+  .MuiDataGrid-cell {
+    background-color: white !important;  /* Nền trắng cho các ô */
+  }
+  
+  /* Đặt nền cho các cột header của bảng */
+  .MuiDataGrid-columnHeader {
+    background-color: white !important;  /* Nền trắng cho tiêu đề cột */
+  }
+  
+  /* Đảm bảo rằng các dòng được phân biệt rõ ràng */
+  .MuiDataGrid-row:nth-child(even) {
+    background-color: #f9f9f9;  /* Nền màu sáng cho các dòng chẵn (nếu cần) */
+  }
+  
+  /* Đảm bảo màu nền khi hover (di chuột) */
+  .MuiDataGrid-row:hover {
+    background-color: #e0e0e0 !important; /* Nền khi hover */
+  }
+  
+  /* Căn giữa văn bản trong các ô của bảng */
+  .MuiDataGrid-cell {
+    display: flex;
+    justify-content: center;  /* Căn giữa theo chiều ngang */
+    align-items: center;      /* Căn giữa theo chiều dọc */
+    text-align: center;       /* Căn giữa text theo chiều ngang */
+  }
+  
+  /* Căn giữa văn bản trong tiêu đề cột */
+  .MuiDataGrid-columnHeaderTitle {
+    display: flex;
+    justify-content: center;  /* Căn giữa tiêu đề cột */
+    align-items: center;
+    text-align: center;
+  }
+  .button-action{
+    display: flex;
+  }
+  select {
+    font-size: 16px; /* Thay đổi kích thước font chữ */
+    border: 1px solid #ccc; /* Đặt viền cho select */
+    border-radius: 4px; /* Bo tròn các góc của select */
+    background-color: #fff; /* Màu nền của select */
+    color: #333; /* Màu chữ của option */
+    cursor: pointer; /* Thêm con trỏ chuột khi hover */
+    transition:
+     border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  }
+  

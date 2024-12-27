@@ -6,12 +6,22 @@ const useTotalRevenue = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const API_HOST = process.env.REACT_APP_API_HOST;
+
   // Helper function to get the first and last days of the current month
   const getCurrentMonthDates = () => {
     const today = new Date();
     const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    const lastDayOfMonth = new Date(
+      today.getFullYear(),
+      today.getMonth() + 1,
+      0
+    );
     return { firstDayOfMonth, lastDayOfMonth };
+  };
+
+  // Fetch user role from localStorage or another source
+  const getUserRole = () => {
+    return localStorage.getItem("roleName"); // Assuming role is stored in localStorage
   };
 
   const fetchTotalRevenue = async (start, end) => {
@@ -19,14 +29,19 @@ const useTotalRevenue = () => {
       setLoading(true);
       setError(null);
 
-      const response = await axios.get(
-        `${API_HOST}/api/usage-histories/total-revenue?start=${start}&end=${end}`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        }
-      );
+      // Determine API endpoint based on role
+      const role = getUserRole();
+      const apiUrl =
+        role === "ROLE_OWNER"
+          ? `${API_HOST}/api/owners/revenue/total`
+          : `${API_HOST}/api/usage-histories/total-revenue`;
+
+      const response = await axios.get(`${apiUrl}?start=${start}&end=${end}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          "ngrok-skip-browser-warning": "69420",
+        },
+      });
 
       setTotalRevenue(response.data);
     } catch (err) {

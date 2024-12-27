@@ -1,7 +1,7 @@
 /* src/components/AddUser.css */
 
 /* Đảm bảo popup chiếm toàn bộ màn hình */
-.popup-form {
+.popup-form-users {
     position: fixed;
     top: 49%;
     left: 50%;
@@ -59,9 +59,9 @@
   }
   
   .popup-form button[type="submit"] {
-    background-color: #4CAF50;
-    color: white;
+    background-color: #BCF0DA;
     cursor: pointer;
+    color:#033333;
   }
   
   .popup-form button[type="button"].btn-close {
@@ -72,6 +72,7 @@
     border: none;
     font-size: 18px;
     cursor: pointer;
+    margin: 10px;
   }
   
   .popup-form button:hover {

@@ -12,6 +12,7 @@
     border-collapse: collapse;
     margin: 10px ;  
     background-color: #ffffff;
+    white-space: nowrap;
     
 }
 .transactions-table{
@@ -24,9 +25,7 @@
 }
 
 .transactions-list{
-    background-color: #fff;
     width: 100%;    
-    padding-top:10px;
     border-radius: 10px;
 }
 .userlist-table th,td {
@@ -126,8 +125,126 @@ button {
 }
 th, td {
     width: 150px; /* Đặt chiều rộng cố định cho th và td */
-    overflow: hidden;  /* Ẩn phần nội dung vượt quá */
-    white-space: nowrap; /* Ngăn không cho nội dung xuống dòng */
     text-overflow: ellipsis; /* Hiển thị dấu '...' nếu nội dung quá dài */
     box-sizing: border-box; 
 }
+/* Style cho select */
+select {
+    width: 200px; /* Đặt chiều rộng của select */
+    padding: 8px 12px; /* Thêm padding cho các phần tử bên trong */
+    font-size: 16px; /* Thay đổi kích thước font chữ */
+    border: 1px solid #ccc; /* Đặt viền cho select */
+    border-radius: 4px; /* Bo tròn các góc của select */
+    background-color: #fff; /* Màu nền của select */
+    color: #333; /* Màu chữ của option */
+    cursor: pointer; /* Thêm con trỏ chuột khi hover */
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    margin-left: 10px;
+  }
+  
+  /* Style khi hover trên select */
+  select:hover {
+    border-color: #88CEEF; /* Đổi màu viền khi hover */
+    box-shadow: 0 0 5px #88CEEF /* Thêm hiệu ứng đổ bóng khi hover */
+  }
+  .machines-information-table{
+    border: 1px solid #e0e0e0;
+  }
+  
+  select:focus {
+    outline: none; /* Tắt đường viền focus mặc định */
+    border-color: #88CEEF; /* Đổi màu viền khi focus */
+    box-shadow: 0 0 5px #88CEEF /* Thêm hiệu ứng đổ bóng khi focus */
+  }
+  
+  /* Style cho các option */
+  option {
+    padding: 8px 12px; /* Thêm padding cho option */
+    font-size: 16px; /* Thay đổi kích thước font chữ của option */
+  }
+  
+  /* Style khi hover trên các option */
+  option:hover {
+    background-color: #f1f1f1; /* Đổi màu nền khi hover trên option */
+  }
+  
+  /* Style cho option được chọn */
+  option:checked {
+    background-color: #007bff; /* Đổi màu nền khi option được chọn */
+    color: #fff; /* Đổi màu chữ khi option được chọn */
+  }
+tr:last-child td {
+    border-bottom: none;
+  }
+.machines-list-table{
+    background-color: #fff;
+    margin: 10px;
+    border: 1px solid #e0e0e0;
+}
+.address-tooltip{
+    display: none;
+}
+/* Ẩn địa chỉ mặc định */
+/* Tạo kiểu cho div chứa tên địa điểm */
+.location-name {
+    cursor: pointer;
+  }
+  
+  /* Ẩn tooltip khi không hover */
+  .address-tooltip {
+    display: none;
+    position: absolute;
+    top: 100%; /* Đẩy tooltip xuống dưới */
+    left: 50%; /* Căn giữa tooltip với phần tử */
+    transform: translateX(-50%); /* Đảm bảo tooltip căn chính giữa */
+    background: #f1f1f1;
+    padding: 5px;
+    border-radius: 3px;
+    border: 1px solid #ddd;
+    font-size: 12px;
+    color: gray;
+    z-index: 1000;
+    white-space: nowrap; /* Đảm bảo nội dung không bị cắt bớt */
+  }
+  
+  /* Hiển thị tooltip khi hover vào tên địa điểm */
+  .location-name:hover .address-tooltip {
+    display: block;
+  }
+  
+  .deleteMachineButton{
+    background-color:#e74c3c;
+    margin-right: 10px;
+    padding:4px;
+    border-radius: 4px;
+  }
+
+  .updateMachineButton{
+    background-color:#f1c40f ;
+    padding:4px;
+    border-radius: 4px;
+  }
+.transactions-table{
+    border: 1px solid #e0e0e0;
+}
+.css-bmnu5q-MuiTableCell-root {
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  display: table-cell;
+  vertical-align: inherit;
+  border-bottom: 1px solid rgba(224, 224, 224, 1);
+  text-align: left;
+  padding: 16px;
+  color: rgba(0, 0, 0, 0.87);
+  line-height: 1.5rem;
+  font-weight: 500;
+  text-align: center;
+}
+.table-cell-border-left {
+  position: relative;
+}
+
+

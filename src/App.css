@@ -1,16 +1,11 @@
 html, body {
   height: 100%; /* Đảm bảo body chiếm hết chiều cao */
-  overflow: hidden; /* Ẩn thanh cuộn của toàn bộ trang */
 }
 
 /* CSS tổng thể cho layout */
 .container {
   display: flex; /* Sử dụng flexbox để sắp xếp sidebar và dashboard bên cạnh nhau */
   height: 100vh; /* Chiều cao bằng chiều cao màn hình */
-  overflow: hidden; /* Ẩn thanh cuộn của container */
-}
-.hidden {
-  display: none;
 }
 /* CSS cho Sidebar */
 .sidebar {
@@ -26,7 +21,7 @@ html, body {
 }
 
 /* CSS cho Dashboard */
-.dashboard,.machine-status,.revenue,.user,.change,.alert,.transactions,.locations{
+.dashboard,.machine-status,.revenue,.user,.change,.alert,.transactions,.locations,.ownerwithdraw,.ownerdetail{
   margin-left: 280px; /* Đẩy dashboard ra bên phải để không bị chồng lên sidebar */
   background-color: #F0F8FF; /* Màu nền của dashboard */
   flex: 1; /* Chiếm không gian còn lại */

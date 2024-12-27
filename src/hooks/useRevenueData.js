@@ -22,6 +22,7 @@ const useRevenueData = (API_HOST, onDateRangeChange) => {
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            "ngrok-skip-browser-warning": "69420",
           },
         }
       );

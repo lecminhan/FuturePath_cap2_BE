@@ -18,7 +18,7 @@
 .form-container {
   background-color: #fff;
   padding: 20px;
-  border-radius: 8px;
+  border-radius: 4px;
   width: 400px;
   max-width: 90%;
   position: relative;
@@ -50,9 +50,9 @@ button[type="submit"] {
   width: 100%; /* Full width of the form */
   padding: 12px; /* Increased padding for button */
   background-color: #88CEEF; /* Button background color */
-  color: white; /* Text color */
+    color: white; /* Text color */
   border: none; /* No border */
-  border-radius: 5px; /* Rounded corners */
+  border-radius: 4px;
   font-size: 16px; /* Font size */
   cursor: pointer; /* Pointer cursor on hover */
   transition: background-color 0.3s ease; /* Hover effect transition */
@@ -60,6 +60,20 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   background-color: #68b8d6; /* Button color on hover */
+}
+input[type="text"] {
+  width: 100%;
+  font-size: 15px;
+  border:none;
+  outline: none;
+  transition: box-shadow 0.3s ease-in-out; 
+}
+input[type="text"]:hover {
+  width: 100%;
+  font-size: 15px;
+  border:none;
+  outline: none;
+  transition: box-shadow 0.3s ease-in-out; 
 }
 
 /* Loading spinner styles */

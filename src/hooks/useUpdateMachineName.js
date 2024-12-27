@@ -12,7 +12,8 @@ const useUpdateMachineName = () => {
     setError(null);
 
     const headers = {
-      Authorization: `Bearer ${token}`, // Add the token here
+      Authorization: `Bearer ${token}`,
+      "ngrok-skip-browser-warning": "69420", // Add the token here
     };
 
     try {

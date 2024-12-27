@@ -1,5 +1,6 @@
 .react-datepicker-wrapper {
-    width: 240px; /* Đặt chiều rộng */
+  margin-left: 65px;
+    width: 280px; /* Đặt chiều rộng */
   }
   
   .react-datepicker__input-container input {
@@ -9,18 +10,38 @@
     padding-left: 30px; /* Khoảng cách bên trong */
     font-size: 14px; /* Kích thước chữ */
     border: 1px solid #ccc; /* Viền mặc định */
-    border-radius: 8px; /* Bo góc */
+    border-radius: 0; /* Bo góc */
     background-color: #fff; /* Màu nền */
     box-sizing: border-box; /* Đảm bảo padding không phá layout */
   }
-  
+  .react-datepicker__input-container{
+    width: 200px;
+  }
+
+  .MuiOutlinedInput-root {
+    border: none;
+    width: 225px;
+  }
   .react-datepicker__input-container input::placeholder {
     color: #aaa; /* Màu placeholder */
   }
   
   .react-datepicker__input-container input:focus {
     outline: none; /* Xóa viền mặc định khi focus */
-    border-color: #007bff; /* Màu viền khi focus */
+    border-color: #1976D2; /* Màu viền khi focus */
     box-shadow: 0 0 4px rgba(0, 123, 255, 0.5); /* Hiệu ứng bóng khi focus */
   }
-  
+  .react-datepicker__day--in-range:not([aria-disabled="true"]):hover{
+    background-color: #1976D2;
+ }
+ .react-datepicker__day--in-range{
+  border-radius: 0.3rem;
+  background-color: #1976D2;
+  color: #fff;
+ }
+
+ .react-datepicker-wrapper{
+  width: 200px;
+  padding-right: 60px;
+
+ }

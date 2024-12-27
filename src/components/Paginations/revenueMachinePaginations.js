@@ -1,5 +1,8 @@
-import React from "react";
-import { ChevronRight, ChevronLeft } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import Box from "@mui/material/Box";
+import { DataGrid } from "@mui/x-data-grid";
+import { LinearProgress, Alert, TextField, IconButton } from "@mui/material";
+import { Search } from "lucide-react";
 import useMachineIncomeList from "../../hooks/useMachineIncomeList";
 import useMachineIncome from "../../hooks/useMachineIncome";
 
@@ -13,93 +16,99 @@ function Rmachinepaginations() {
     handlePageChange,
   } = useMachineIncomeList();
 
-  // Fetch machine income data
   const {
     incomeByMachine,
     loading: incomeLoading,
     error: incomeError,
   } = useMachineIncome();
 
-  // Show loading or error states for the data fetch
-  if (loading || incomeLoading) return <p>Đang tải dữ liệu...</p>;
-  if (error || incomeError) return <p>Có lỗi xảy ra: {error || incomeError}</p>;
+  // Search functionality
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filteredItems, setFilteredItems] = useState(currentItems);
+
+  useEffect(() => {
+    // Filter items based on the search term
+    if (searchTerm) {
+      setFilteredItems(
+        currentItems.filter((item) =>
+          item.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    } else {
+      setFilteredItems(currentItems);
+    }
+  }, [searchTerm, currentItems]);
+
+  // Define columns for DataGrid
+  const columns = [
+    { field: "id", headerName: "ID", width: 50 },
+    { field: "name", headerName: "Tên Máy", width: 180 },
+    { field: "location", headerName: "Địa điểm", width: 250 },
+    { field: "income", headerName: "Thu nhập", width: 100 },
+  ];
+
+  // Process rows with income data
+  const rows = filteredItems.map((data) => ({
+    id: data.id,
+    name: data.name,
+    location: data.locationName,
+    income: incomeByMachine[data.id]?.totalIncome || 0,
+  }));
 
   return (
-    <div>
-      <table className="machines-information-table">
-        <thead>
-          <tr>
-            <th>Mã số máy</th>
-            <th>Tên Máy</th>
-            <th>Trạng thái</th>
-            <th>Địa điểm</th>
-            <th>Thu nhập</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentItems && currentItems.length > 0 ? (
-            currentItems.map((data) => (
-              <tr key={data.id}>
-                <td>{data.id}</td>
-                <td>{data.name}</td>
-                <td>{data.status}</td>
-                <td>
-                  {data.locationName},<br />
-                  {data.locationAddress}
-                </td>
-                <td>{incomeByMachine[data.id]?.totalIncome || 0} VND</td>
-              </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="5">Không có dữ liệu</td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+    <div className="machine-table-container">
+      <Box sx={{ height: 400, width: "100%" }}>
+        {/* Loading Indicator */}
+        {(loading || incomeLoading) && (
+          <Box sx={{ width: "100%", marginBottom: 2 }}>
+            <LinearProgress />
+          </Box>
+        )}
 
-      {/* Pagination controls */}
-      <div className="pagination">
-        <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          style={{
-            border: 0,
-            borderRadius: 10,
-            background: "#fff",
-            padding: "5px 10px",
+        {/* Error Message */}
+        {(error || incomeError) && (
+          <Alert severity="error" sx={{ marginBottom: 2 }}>
+            {error || incomeError}
+          </Alert>
+        )}
+
+        {/* Search Field */}
+        <TextField
+          label="Tìm kiếm"
+          variant="outlined"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          size="small"
+          sx={{
+            marginBottom: 2,
+            width: "100%",
+            "& .MuiInputBase-root": {
+              height: 40,
+            },
           }}
-        >
-          <ChevronLeft className="chevronStyle" />
-        </button>
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => handlePageChange(index + 1)}
-            style={{
-              backgroundColor:
-                currentPage === index + 1 ? "lightblue" : "white",
-              border: 0,
-              borderRadius: 10,
-              padding: "5px 10px",
-            }}
-          >
-            {index + 1}
-          </button>
-        ))}
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          style={{
-            border: 0,
-            borderRadius: 10,
-            background: "#fff",
-            padding: "5px 10px",
+          InputProps={{
+            endAdornment: (
+              <IconButton>
+                <Search />
+              </IconButton>
+            ),
           }}
-        >
-          <ChevronRight className="chevronStyle" />
-        </button>
-      </div>
+        />
+
+        {/* Data Grid */}
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={6}
+          pagination
+          page={currentPage - 1}
+          onPageChange={(newPage) => handlePageChange(newPage + 1)}
+          autoHeight
+          checkboxSelection
+          disableSelectionOnClick
+          paginationMode="client" // Phân trang phía client
+        />
+      </Box>
     </div>
   );
 }

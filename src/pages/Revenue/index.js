@@ -1,16 +1,14 @@
-import revenue from "./revenue.css";
+import React, { useState } from "react";
 import NotificationIcons from "../../components/Notifications";
-import React, { useEffect, useState } from "react";
-import SearchBar from "../../components/Search";
 import RMachinepaginations from "../../components/Paginations/revenueMachinePaginations";
-import { Navigate, useNavigate } from "react-router-dom";
-import { Line } from "react-chartjs-2";
-import useRecentTransactions from "../../hooks/useRecentTransactions";
-import CostChart from "../../components/ChartComponents/RevenueChart";
 import RevenueDatePicker from "../../components/DatePickerComponents";
+import { useNavigate } from "react-router-dom";
+import useRecentTransactions from "../../hooks/useRecentTransactions";
+import { CircularProgress, Box, Typography, Alert } from "@mui/material";
+import "./revenue.css";
 
 function Revenue() {
-  const [totalRevenue, setTotalRevenue] = useState(null); // Dữ liệu doanh thu
+  const [totalRevenue, setTotalRevenue] = useState(null); // Tổng doanh thu
   const [loadingRevenue, setLoadingRevenue] = useState(false); // Loading state
   const [errorRevenue, setErrorRevenue] = useState(null); // Error state
   const {
@@ -19,103 +17,167 @@ function Revenue() {
     error: errorTransactions,
   } = useRecentTransactions();
   const navigate = useNavigate();
-  if (loadingRevenue || loadingTransactions) {
-    return <div>Loading...</div>;
-  }
 
-  if (errorRevenue || errorTransactions) {
+  // Loading toàn trang
+  if (loadingRevenue || loadingTransactions) {
     return (
-      <div>
-        <p>Error: {errorRevenue || errorTransactions}</p>
+      <div className="revenue loading">
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            flexDirection: "column",
+          }}
+        >
+          <CircularProgress size={80} />
+          <Typography sx={{ marginTop: 2, color: "#5B6C8F" }}>
+            Đang tải dữ liệu doanh thu...
+          </Typography>
+        </Box>
       </div>
     );
   }
+
+  // Hiển thị lỗi nếu có
+  if (errorRevenue || errorTransactions) {
+    return (
+      <div className="revenue error">
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh",
+            flexDirection: "column",
+          }}
+        >
+          <Alert
+            severity="error"
+            sx={{
+              textAlign: "center",
+              position: "absolute",
+              right: 15,
+              marginBottom: 2,
+              bottom: 0,
+            }}
+          >
+            Không thể lấy dữ liệu doanh thu!
+          </Alert>
+        </Box>
+      </div>
+    );
+  }
+
   const handleDateRangeChange = (revenueData) => {
     setTotalRevenue(revenueData);
   };
 
-  // Kiểm tra nếu đang loading hoặc có lỗi
-  if (loadingRevenue) {
-    return <div>Loading...</div>;
-  }
-
-  if (errorRevenue) {
-    return (
-      <div>
-        <p>Error: {errorRevenue}</p>
-      </div>
-    );
-  }
-
   return (
     <div className="revenue">
+      {/* Header */}
       <div className="header">
         <div className="reload">
-          {" "}
           <NotificationIcons />
         </div>
       </div>
-      <div className="section-1 ">
+
+      {/* Nội dung chính */}
+      <div className="section-1">
+        {/* Phần bên phải */}
+        <div className="section-right">
+          <div className="table4 box">
+            <div className="machine-tablebox">
+              <div className="Rmachine-paginations">
+                <RMachinepaginations />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Phần bên trái */}
         <div className="section-left">
           <div className="table1 box">
             <div className="DatePicker">
               <RevenueDatePicker onDateRangeChange={handleDateRangeChange} />
             </div>
           </div>
+
           <div className="table2 box">
-            <div
-              style={{
+            <Typography
+              sx={{
                 textAlign: "center",
                 fontSize: "20px",
-                fontWeight: 600,
+                fontWeight: "600",
                 color: "#5B6C8F",
               }}
             >
               Tổng doanh thu
-            </div>
-            <div
-              style={{
+            </Typography>
+            <Typography
+              sx={{
                 textAlign: "center",
                 fontSize: "25px",
                 color: "#5B6C8F",
               }}
             >
-              {totalRevenue ? totalRevenue + " VND" : "0 "}
-            </div>
+              {totalRevenue ? `${totalRevenue} VND` : "0 VND"}
+            </Typography>
           </div>
+
           <div className="table3 box">
-            <div className="title-recentrans"> Giao dịch gần đây</div>
+            <div className="title-recentrans">Giao dịch gần đây</div>
             <ul className="content-recentrans">
               {userTransactions.length === 0 ? (
-                <li>No transactions found</li>
+                <li
+                  style={{
+                    padding: "20px",
+                    textAlign: "center",
+                    color: "#5B6C8F",
+                  }}
+                >
+                  Không có giao dịch nào
+                </li>
               ) : (
-                userTransactions.map((transaction) => (
-                  <li
-                    style={{ marginLeft: "20px", color: "#5B6C8F" }}
-                    key={transaction.id + transaction.userName}
-                  >
-                    <strong>Người dùng:</strong> {transaction.userName}
-                    <br />
-                    {new Date(
-                      `${transaction.timestamp[0]}-${transaction.timestamp[1]}-${transaction.timestamp[2]} ${transaction.timestamp[3]}:${transaction.timestamp[4]}`
-                    ).toLocaleDateString()}
-                    <br />
-                    <strong>
+                userTransactions.map((transaction) => {
+                  const formatDate = (timeArray) => {
+                    if (Array.isArray(timeArray)) {
+                      const [year, month, day, hour, minute] = timeArray;
+                      return `${day}-${month}-${year} ${hour}:${minute}`;
+                    }
+                    return "Invalid date";
+                  };
+
+                  return (
+                    <li
+                      style={{
+                        marginLeft: "20px",
+                        color: "#5B6C8F",
+                      }}
+                      key={transaction.usageId + transaction.userName}
+                    >
+                      <strong>Người dùng:</strong> {transaction.userName}
+                      <br />
+                      {formatDate(transaction.startTime)}
                       <div
                         style={{
                           textAlign: "right",
                           marginRight: "20px",
                           color: "#2FE5B6",
+                          fontWeight: "bold",
                         }}
                       >
-                        {transaction.amount} VND
+                        {transaction.cost.toLocaleString()} VND
                       </div>
-                    </strong>
-                    <hr style={{ width: "80%" }} />
-                  </li>
-                ))
+                      <hr style={{ width: "80%" }} />
+                    </li>
+                  );
+                })
               )}
             </ul>
+
+            {/* Nút xem tất cả */}
             <div className="viewalltransactions">
               <button
                 className="button-viewalltransactions"
@@ -126,22 +188,9 @@ function Revenue() {
             </div>
           </div>
         </div>
-        <div className="section-right">
-          <div className="table4 box">
-            <div className="machine-tablebox">
-              <div className="Rmachine-paginations">
-                <RMachinepaginations />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="section-2 box">
-        <div className="transactions-chart">
-          <CostChart />
-        </div>
       </div>
     </div>
   );
 }
+
 export default Revenue;

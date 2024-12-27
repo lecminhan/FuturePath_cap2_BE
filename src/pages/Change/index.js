@@ -1,63 +1,237 @@
-import React, { useState } from 'react';
-import NotificationIcons from '../../components/Notifications';
-import useFetchWashingTypes from '../../hooks/useFetchWashingTypes';
-import { Save } from 'lucide-react';
-import useUpdateWashingType from '../../hooks/useUpdateWashingType';  // Import the new hook
-import style from './style.css';
+import React, { useState, useEffect } from "react";
+import NotificationIcons from "../../components/Notifications";
+import useFetchWashingTypes from "../../hooks/useFetchWashingTypes";
+import useUpdateWashingType from "../../hooks/useUpdateWashingType";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import { Save, Edit, Cancel } from "@mui/icons-material";
+import { Delete, Search } from "@mui/icons-material";
+import {
+  CircularProgress,
+  Typography,
+  Box,
+  Snackbar,
+  Alert,
+  TextField,
+  IconButton,
+} from "@mui/material";
+import "./change.css";
 
 function Change() {
   const { data, loading, error } = useFetchWashingTypes();
-  const { updateWashingType } = useUpdateWashingType();  // Use the hook to update washing type
-  const [editValues, setEditValues] = useState({});
+  const { updateWashingType } = useUpdateWashingType();
+  const [editRows, setEditRows] = useState({});
+  const [isSaving, setIsSaving] = useState(false);
+  const [roleName, setRoleName] = useState(
+    localStorage.getItem("roleName") || ""
+  );
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
 
-  // Handle input changes for typeName, duration, and price
-  const handleChange = (id, field, value) => {
-    // If the value is a number (duration or price), ensure it's not negative
-    if (field === 'defaultDuration' || field === 'defaultPrice') {
-      // If the value is a number and is negative, reset to 0
-      if (value < 0) {
-        value = 0;
-      }
+  useEffect(() => {
+    if (data) {
+      setFilteredData(
+        data.filter((item) =>
+          item.typeName.toLowerCase().includes(searchQuery.toLowerCase())
+        )
+      );
     }
+  }, [data, searchQuery]);
 
-    setEditValues(prev => ({
-      ...prev,
-      [id]: {
-        ...prev[id],
-        [field]: value === "" ? "" : value // Save empty inputs as empty string
-      }
-    }));
+  const handleEditClick = (id) => {
+    setEditRows((prev) => ({ ...prev, [id]: true }));
   };
 
-  // Handle saving updated values for typeName, duration, and price
-  const handleSave = async (id) => {
-    const updatedValues = editValues[id];
-    if (updatedValues) {
-      // Find the original type by id from the data array
-      const type = data.find(t => t.id === id);
+  const handleCancelClick = (id) => {
+    setEditRows((prev) => {
+      const updated = { ...prev };
+      delete updated[id];
+      return updated;
+    });
+  };
 
+  const handleSave = async (id) => {
+    const updatedRow = editRows[id];
+    if (updatedRow) {
+      setIsSaving(true);
+      const originalData = data.find((row) => row.id === id);
       const updatedData = {
         id,
-        typeName: updatedValues.typeName ?? type.typeName,  // Ensure typeName is included and defaults to original value if not edited
-        defaultDuration: updatedValues.defaultDuration ?? type.defaultDuration, // Ensure defaultDuration is included and defaults to original value if not edited
-        defaultPrice: updatedValues.defaultPrice ?? type.defaultPrice // Ensure defaultPrice is included and defaults to original value if not edited
+        typeName: updatedRow.typeName || originalData.typeName,
+        defaultDuration:
+          updatedRow.defaultDuration || originalData.defaultDuration,
+        defaultPrice: updatedRow.defaultPrice || originalData.defaultPrice,
       };
 
       try {
         await updateWashingType(id, updatedData);
-        setEditValues(prev => ({ ...prev, [id]: {} }));  // Clear the saved edits for that ID
-        alert('Cập nhật thành công');
-        window.location.reload();
+        setSnackbarMessage("Cập nhật thành công");
+        setOpenSnackbar(true);
+        handleCancelClick(id);
       } catch (error) {
-        alert('Có lỗi khi cập nhật');
+        setSnackbarMessage("Có lỗi khi cập nhật");
+        setOpenSnackbar(true);
+      } finally {
+        setIsSaving(false);
       }
     }
   };
 
-  // Handle loading and error states
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error fetching data: {error}</div>;
-  if (!data || data.length === 0) return <div>No data available</div>;
+  const columns = [
+    {
+      field: "id",
+      headerName: "ID Loại",
+      width: 100,
+      sx: { textAlign: "center" },
+    },
+    {
+      field: "typeName",
+      headerName: "Tên Loại",
+      flex: 1,
+      renderCell: (params) => {
+        const isEditing = !!editRows[params.id];
+        return isEditing ? (
+          <input
+            type="text"
+            defaultValue={editRows[params.id]?.typeName ?? params.value ?? ""}
+            onInput={(e) => {
+              const newValue = e.target.value;
+              setEditRows((prev) => ({
+                ...prev,
+                [params.id]: {
+                  ...prev[params.id],
+                  typeName: newValue,
+                },
+              }));
+            }}
+            onKeyDown={(e) => {
+              if (e.key === " ") e.stopPropagation();
+            }}
+            className="input-field"
+          />
+        ) : (
+          <span>{params.value}</span>
+        );
+      },
+    },
+    {
+      field: "defaultDuration",
+      headerName: "Thời Gian Mặc Định (phút)",
+      flex: 1,
+      renderCell: (params) => {
+        const isEditing = !!editRows[params.id];
+        return isEditing ? (
+          <input
+            type="text"
+            defaultValue={
+              editRows[params.id]?.defaultDuration ?? params.value ?? ""
+            }
+            onInput={(e) => {
+              const newValue = e.target.value;
+              if (!isNaN(newValue) && Number(newValue) <= 100) {
+                setEditRows((prev) => ({
+                  ...prev,
+                  [params.id]: {
+                    ...prev[params.id],
+                    defaultDuration: newValue,
+                  },
+                }));
+              } else if (isNaN(newValue)) {
+                setSnackbarMessage("Vui lòng nhập số hợp lệ");
+                setOpenSnackbar(true);
+              } else {
+                setSnackbarMessage("Không thể đặt thời gian hơn 100 phút");
+                setOpenSnackbar(true);
+              }
+            }}
+            className="input-field"
+          />
+        ) : (
+          <span>{params.value}</span>
+        );
+      },
+    },
+    {
+      field: "defaultPrice",
+      headerName: "Giá Mặc Định (VND)",
+      flex: 1,
+      renderCell: (params) => {
+        const isEditing = !!editRows[params.id];
+        return isEditing ? (
+          <input
+            type="text"
+            defaultValue={
+              editRows[params.id]?.defaultPrice ?? params.value ?? ""
+            }
+            onInput={(e) => {
+              const newValue = e.target.value;
+              if (!isNaN(newValue)) {
+                setEditRows((prev) => ({
+                  ...prev,
+                  [params.id]: {
+                    ...prev[params.id],
+                    defaultPrice: newValue,
+                  },
+                }));
+              } else {
+                setSnackbarMessage("Vui lòng nhập số hợp lệ");
+                setOpenSnackbar(true);
+              }
+            }}
+            className="input-field"
+          />
+        ) : (
+          <span>{params.value}</span>
+        );
+      },
+    },
+    {
+      field: "actions",
+      headerName: "Hành Động",
+      type: "actions",
+      width: 150,
+      getActions: (params) => {
+        const isEditing = !!editRows[params.id];
+        return isEditing
+          ? [
+              <GridActionsCellItem
+                icon={<Save />}
+                label="Lưu"
+                onClick={() => handleSave(params.id)}
+                disabled={isSaving}
+              />,
+              <GridActionsCellItem
+                icon={<Cancel />}
+                label="Hủy"
+                onClick={() => handleCancelClick(params.id)}
+              />,
+            ]
+          : [
+              <GridActionsCellItem
+                icon={<Edit />}
+                label="Sửa"
+                onClick={() => handleEditClick(params.id)}
+              />,
+            ];
+      },
+    },
+  ];
+
+  if (loading)
+    return (
+      <div
+        className="change"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </div>
+    );
 
   return (
     <div className="change">
@@ -66,60 +240,55 @@ function Change() {
           <NotificationIcons />
         </div>
       </div>
-      <div className="change-table">
-        <table>
-          <thead>
-            <tr>
-              <th>ID Loại</th>
-              <th>Tên Loại</th>
-              <th>Thời Gian Mặc Định (phút)</th>
-              <th>Giá Mặc Định (VND)</th>
-              <th>Thao Tác</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((type) => (
-              <tr key={type.id}>
-                <td>{type.id}</td>
-                <td>
-                  <input 
-                    type="tname-text"
-                    value={editValues[type.id]?.typeName ?? type.typeName}
-                    onChange={(e) => handleChange(type.id, 'typeName', e.target.value)}
-                  />
-                </td>
-                <td>
-                  <input 
-                    type="tname-number"
-                    value={editValues[type.id]?.defaultDuration ?? type.defaultDuration}
-                    onChange={(e) => handleChange(type.id, 'defaultDuration', e.target.value === "" ? "" : Number(e.target.value))}
-                  />
-                </td>
-                <td>
-                  <input
-                    type="tname-number"
-                    value={editValues[type.id]?.defaultPrice ?? type.defaultPrice}
-                    onChange={(e) => handleChange(type.id, 'defaultPrice', e.target.value === "" ? "" : Number(e.target.value))}
-                  />
-                </td>
-                <td>
-                  <button className='btn-wstype'
-                    onClick={() => handleSave(type.id)}
-                    disabled={ 
-                      !editValues[type.id] || 
-                      (editValues[type.id].typeName === type.typeName && 
-                       editValues[type.id].defaultDuration === type.defaultDuration &&
-                       editValues[type.id].defaultPrice === type.defaultPrice) // Check if any value is changed
-                    }
-                  >
-                    <Save/>
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+
+      <div className="search-bar" style={{ paddingBottom: "1rem" }}>
+        <TextField
+          label="Tìm kiếm loại giặt"
+          variant="outlined"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          size="small"
+          sx={{
+            marginLeft: 3,
+            backgroundColor: "#fff",
+            "& .MuiInputBase-root": {
+              height: 40, // Điều chỉnh chiều cao cụ thể
+            },
+          }}
+          InputProps={{
+            endAdornment: (
+              <IconButton>
+                <Search />
+              </IconButton>
+            ),
+          }}
+        />
       </div>
+
+      <div
+        className="change-table-container"
+        sx={{ height: 400, width: "95%" }}
+      >
+        <DataGrid rows={filteredData} columns={columns} autoHeight />
+      </div>
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackbar(false)}
+      >
+        <Alert
+          onClose={() => setOpenSnackbar(false)}
+          severity={
+            snackbarMessage.includes("Cập nhật thành công")
+              ? "success"
+              : "error"
+          }
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

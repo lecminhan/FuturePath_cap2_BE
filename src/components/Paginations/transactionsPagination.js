@@ -1,90 +1,143 @@
-import React from 'react';
-import { ChevronRight, ChevronLeft } from 'lucide-react';
-import useTransactions from '../../hooks/useTransactions'; // Import hook
+import React, { useState } from "react";
+import { Search } from "lucide-react";
+import {
+  CircularProgress,
+  Alert,
+  IconButton,
+  TextField,
+  Box,
+  Typography,
+} from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid"; // Import DataGrid từ MUI
+import useTransactions from "../../hooks/useTransactions"; // Import hook
 
 function TransactionPaginations() {
-    const {
-        currentItems,
-        currentPage,
-        totalPages,
-        loading,
-        error,
-        handlePageChange
-    } = useTransactions(); // Gọi hook để lấy dữ liệu và các hàm xử lý
-    
-    if (loading) return <p>Đang tải dữ liệu...</p>;
-    if (error) return <p>Có lỗi xảy ra: {error}</p>;
+  const { currentItems, loading, error } = useTransactions(); // Gọi hook để lấy dữ liệu
+  const [searchQuery, setSearchQuery] = useState("");
 
+  // Function to format date/time
+  const formatDate = ([year, month, day, hour, minute, second]) => {
+    const date = new Date(year, month - 1, day, hour, minute, second);
+    return new Intl.DateTimeFormat("vi-VN", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+    }).format(date);
+  };
+
+  // Function to handle search input
+  const handleSearch = (e) => setSearchQuery(e.target.value);
+
+  // Filter rows based on search query
+  const filteredRows = currentItems.filter((item) =>
+    item.userName.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Columns for the DataGrid
+  const columns = [
+    { field: "id", headerName: "ID", width: 50 },
+    { field: "transaction", headerName: "Giao dịch", width: 170 },
+    { field: "dateTime", headerName: "Ngày & Giờ", width: 280 },
+    { field: "cost", headerName: "Số tiền", width: 100 },
+    { field: "washingType", headerName: "Loại giặt", width: 220 },
+    { field: "machine", headerName: "Máy giặt", width: 200 },
+  ];
+
+  // Prepare rows data with sequential ID
+  const rows = filteredRows.map((item, index) => ({
+    id: index + 1,
+    transaction: `Giao dịch từ ${item.userName}`,
+    dateTime: Array.isArray(item.startTime)
+      ? formatDate(item.startTime)
+      : "Không có dữ liệu",
+    cost: item.cost,
+    washingType: item.washingTypeName,
+    machine: item.machineName,
+  }));
+
+  // Hiển thị loading ở giữa màn hình
+  if (loading) {
     return (
-        <div className='transactions-list'>
-            <table className='transactions-table'>
-                <thead>
-                    <tr>
-                        <th>Giao dịch</th>
-                        <th>Ngày & Giờ</th>
-                        <th>Số tiền</th>
-                        <th>Trạng thái</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {currentItems.map((data) => {
-                        const timestamp = data.timestamp; 
-                        const date = `${timestamp[0]}-${String(timestamp[1]).padStart(2, '0')}-${String(timestamp[2]).padStart(2, '0')}`;  // YYYY-MM-DD
-                        const time = `${String(timestamp[3]).padStart(2, '0')}:${String(timestamp[4]).padStart(2, '0')}`;  // HH:MM
-
-                        return (
-                            <tr key={data.id}>
-                                <td>Giao dịch từ {data.userName}</td>
-                                <td> {date} | {time}</td>
-                                <td>{data.amount} VND</td>
-                                <td>{data.status}</td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
-            <div className="pagination">
-                <button
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    disabled={currentPage === 1}
-                    style={{
-                        border: 0,
-                        borderRadius: 10,
-                        background: '#fff',
-                        padding: '5px 10px',
-                    }}
-                >
-                    <ChevronLeft className='chevronStyle' />
-                </button>
-                {Array.from({ length: totalPages }, (_, index) => (
-                    <button
-                        key={index}
-                        onClick={() => handlePageChange(index + 1)}
-                        style={{
-                            backgroundColor: currentPage === index + 1 ? 'lightblue' : 'white',
-                            border: 0,
-                            borderRadius: 10,
-                            padding: '5px 10px',
-                        }}
-                    >
-                        {index + 1}
-                    </button>
-                ))}
-                <button
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    disabled={currentPage === totalPages}
-                    style={{
-                        border: 0,
-                        borderRadius: 10,
-                        background: '#fff',
-                        padding: '5px 10px',
-                    }}
-                >
-                    <ChevronRight className='chevronStyle' />
-                </button>
-            </div>
-        </div>
+      <div
+        className="transactions-list"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          flexDirection: "column",
+        }}
+      >
+        <CircularProgress size={60} />
+        <Typography
+          variant="body1"
+          style={{ marginTop: "10px", color: "#555" }}
+        >
+          Đang tải dữ liệu giao dịch...
+        </Typography>
+      </div>
     );
+  }
+
+  // Hiển thị thông báo lỗi
+  if (error) {
+    return (
+      <div className="transactions-list">
+        <Alert severity="error">Có lỗi xảy ra: {error}</Alert>
+      </div>
+    );
+  }
+
+  return (
+    <div className="transactions-list">
+      {/* Search Bar */}
+      <Box
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        mb={2}
+      >
+        <TextField
+          label="Tìm kiếm giao dịch"
+          variant="outlined"
+          fullWidth
+          value={searchQuery}
+          onChange={handleSearch}
+          size="small"
+          sx={{
+            marginBottom: 1,
+            width: "40%",
+            backgroundColor: "#fff",
+            "& .MuiInputBase-root": {
+              height: 40,
+            },
+          }}
+          InputProps={{
+            endAdornment: (
+              <IconButton>
+                <Search />
+              </IconButton>
+            ),
+          }}
+        />
+      </Box>
+
+      {/* DataGrid Component */}
+      <div style={{ height: 400, width: "100%" }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          pageSize={5}
+          disableSelectionOnClick
+          autoHeight
+        />
+      </div>
+    </div>
+  );
 }
 
 export default TransactionPaginations;

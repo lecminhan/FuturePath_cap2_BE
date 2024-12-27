@@ -1,35 +1,43 @@
 import { useState, useEffect } from "react";
 import { ref, onValue } from "firebase/database";
-import { realtimeDB } from "../FirebaseConfig"; // Điều chỉnh đường dẫn import nếu cần
+import { realtimeDB } from "../FirebaseConfig"; // Điều chỉnh đường dẫn nếu cần
 
-const useMachineStatus = (machineId) => {
+const useMachineStatus = (secretId) => {
   const [status, setStatus] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const statusRef = ref(realtimeDB, `machines/${machineId}/status`); // Đường dẫn đúng đến trạng thái máy giặt
-    // Lắng nghe sự thay đổi trong trạng thái của máy giặt
+    if (!secretId) {
+      setError("Không có secret_id hợp lệ");
+      setLoading(false);
+      return;
+    }
+
+    // Tham chiếu đến trạng thái máy trong Firebase
+    const statusRef = ref(realtimeDB, `WashingMachineList/${secretId}/status`);
+
+    // Lắng nghe dữ liệu từ Firebase
     const unsubscribe = onValue(
       statusRef,
       (snapshot) => {
         if (snapshot.exists()) {
-          setStatus(snapshot.val()); // Cập nhật trạng thái máy giặt khi có sự thay đổi
+          setStatus(snapshot.val());
         } else {
-          setStatus(null); // Nếu không có dữ liệu thì đặt trạng thái là null
+          setStatus("Không có dữ liệu");
         }
-        setLoading(false); // Đã hoàn thành việc lấy dữ liệu
+        setLoading(false);
       },
-      (err) => {
+      (firebaseError) => {
         setError("Không thể lấy trạng thái máy");
-        console.error(err);
+        console.error("Firebase Error:", firebaseError);
         setLoading(false);
       }
     );
 
-    // Cleanup: Ngừng lắng nghe khi component bị hủy
+    // Cleanup: Hủy đăng ký khi component bị unmount
     return () => unsubscribe();
-  }, [machineId]);
+  }, [secretId]);
 
   return { status, loading, error };
 };

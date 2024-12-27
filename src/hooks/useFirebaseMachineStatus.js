@@ -1,41 +1,48 @@
-// src/hooks/useFirebaseMachineStatus.js
-
 import { useState, useEffect, useRef } from "react";
 import { ref, onValue } from "firebase/database";
 import { realtimeDB } from "../FirebaseConfig"; // Ensure the correct path to FirebaseConfig
 
-const useFirebaseMachineStatus = (machines) => {
-  const [firebaseStatus, setFirebaseStatus] = useState([]); // State to store Firebase data
-  const unsubscribeRefs = useRef([]); // Store unsubscribe functions in a ref
+const useFirebaseMachineStatus = (WashingMachineList) => {
+  const [firebaseStatus, setFirebaseStatus] = useState([]);
+  const unsubscribeRefs = useRef([]);
 
   useEffect(() => {
-    // Clean up previous subscriptions when machines change
+    // Clean up previous subscriptions
     unsubscribeRefs.current.forEach((unsubscribe) => unsubscribe());
     unsubscribeRefs.current = [];
 
-    if (machines.length > 0) {
-      // Subscribe to Firebase status updates for each machine
-      machines.forEach((machine) => {
-        const machinesRef = ref(realtimeDB, `machines/${machine.id}/status`);
-        const unsubscribe = onValue(machinesRef, (snapshot) => {
-          // snapshot holds the data from Firebase
-          const data = snapshot.val(); // Get the actual value of the snapshot
+    if (WashingMachineList.length > 0) {
+      WashingMachineList.forEach((machine) => {
+        const statusRef = ref(
+          realtimeDB,
+          `WashingMachineList/${machine.secretId}/status`
+        );
+        const unsubscribe = onValue(statusRef, (snapshot) => {
+          const data = snapshot.val();
+          // Only update the state if the status has changed
+          setFirebaseStatus((prevStatus) => {
+            // Find the existing status for this machine
+            const existingStatus = prevStatus.find(
+              (status) => status.secretId === machine.secretId
+            );
 
-          if (data) {
-            // Use snapshot to get data and update the status state
-            setFirebaseStatus((prevStatus) => {
-              const updatedStatus = prevStatus.filter(
-                (status) => status.machineId !== machine.id
-              );
-              return [
-                ...updatedStatus,
-                {
-                  machineId: machine.id,
-                  status: data,
-                },
-              ];
-            });
-          }
+            // If the status has not changed, no need to update
+            if (existingStatus && existingStatus.status === data) {
+              return prevStatus; // No update needed
+            }
+
+            // Otherwise, update the state
+            const updatedStatus = prevStatus.filter(
+              (status) => status.secretId !== machine.secretId
+            );
+            return [
+              ...updatedStatus,
+              {
+                secretId: machine.secretId,
+                status: data,
+              },
+            ];
+          });
         });
 
         // Store unsubscribe function in ref
@@ -43,11 +50,11 @@ const useFirebaseMachineStatus = (machines) => {
       });
     }
 
-    // Cleanup function to unsubscribe when the component unmounts or machines change
+    // Cleanup function
     return () => {
       unsubscribeRefs.current.forEach((unsubscribe) => unsubscribe());
     };
-  }, [machines]);
+  }, [WashingMachineList.length]); // Now depends on the length of WashingMachineList, not the list itself
 
   return firebaseStatus;
 };
