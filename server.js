@@ -1,29 +1,40 @@
-const express = require('express');
-const cors = require('cors');
-const userRoutes = require('./src/router/user'); // Đường dẫn đến file users.js
-const machinesRoutes = require('./src/router/machine');
-const dashboardRoutes= require('./src/router/dashboard');
-const revenueRoutes= require('./src/router/revenue')
-const transactionsRoutes=require('./src/router/transactions')
-const changeRoutes = require('./src/router/change')
+require("dotenv").config();
+const express = require("express");
+const bodyParser = require("body-parser");
+const authRoutes = require("./src/router/authRouters");
+const quizzesRoutes = require("./src/router/quizzesRouters");
+const conversation = require("./src/router/ConversationRoutes");
+const chatbot = require("./src/router/chatRoutes"); // Import route chatbot
+const cookieParser = require("cookie-parser");
+const cors = require("cors");
+
 const app = express();
-const port = 3004;
+app.use(cors());
+// Middleware
+app.use(bodyParser.json());
+app.use(cookieParser());
+// CORS (nếu dùng frontend riêng)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  next();
+});
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/quizzes", quizzesRoutes);
+app.use("/api/conversation", conversation);
+app.use("/api/chatbot", chatbot);
 
-app.use(cors());  // Thêm middleware CORS
+// Error handling middleware
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: "Something broke!" });
+});
 
-// Sử dụng router cho API
-app.use('/api/users', userRoutes);
-
-app.use('/api/machines', machinesRoutes);
-
-app.use('/api/dashboard',dashboardRoutes);
-
-app.use('/api/revenue',revenueRoutes);
-
-app.use('/api/transactions',transactionsRoutes);
-
-app.use('/api/change',changeRoutes);
-// Bắt đầu server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+const PORT = process.env.PORT || 3004;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });

@@ -1,70 +1,64 @@
-# Getting Started with Create React App
+# Readme.txt
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Project Overview
 
-## Available Scripts
+PublicLaundSmartSystem is a front-end web application designed to manage and optimize the usage of public laundry systems. It provides a user-friendly interface for scheduling, monitoring, and managing laundry machine usage.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Tools and Technologies
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **HTML5**: Used for building the content structure.
+- **CSS3**: Used for designing and styling the interface.
+- **JavaScript (ES6)**: Used for adding interactivity and managing application logic.
+- **CSS Frameworks**: TailwindCSS
+- **npm**: Used for managing and installing packages.
+- **API Testing**: Postman.
+- **Code Editor**: Visual Studio Code.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## System Requirements
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js: Version >= 16.x.
+- A modern web browser (e.g., Chrome, Firefox, Edge).
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## How to Run the Project
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+1. **Clone or download the repository**:
+   git clone <https://github.com/lecminhan/PublicLaundSmartSystem.git> cd PublicLaundSmartSystem
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+2. **Install the required packages**:
+   npm install
 
-### `npm run eject`
+3. **Start the application**:  
+   npm start
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+4. **Open your browser** and navigate to:
+   http://localhost:3000
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Development Tools
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **npm**: For package management and running scripts.
+- **Postman**: For testing API endpoints.
+- **Visual Studio Code**: Recommended editor for writing HTML, CSS, and JavaScript.
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Author
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **Name**: Lê Công Minh An
+- **Email**: lecminhan@dtu.edu.vn
+- **GitHub**:lecminhan
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Notes
 
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- To build the production version of the application, use:
+  npm run build
+- If you encounter issues, check the browser's developer console or create an issue in the repository.
