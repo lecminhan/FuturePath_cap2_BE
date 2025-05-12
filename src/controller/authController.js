@@ -55,10 +55,10 @@ const registerUser = async (req, res) => {
 
     // Create user
     const { rows } = await client.query(
-      `INSERT INTO "User" (username, email, password) 
-       VALUES ($1, $2, $3) 
-       RETURNING id, username, email, created_at`,
-      [username, email, hashedPassword]
+      `INSERT INTO "User" (username, email, password, status, created_at) 
+   VALUES ($1, $2, $3, $4, NOW()) 
+   RETURNING id, username, email, created_at`,
+      [username, email, hashedPassword, "false"]
     );
 
     // Assign role
