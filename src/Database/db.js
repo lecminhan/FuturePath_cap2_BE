@@ -1,10 +1,10 @@
 const { Pool } = require("pg");
 const pool = new Pool({
   user: "postgres",
-  host: "localhost",
-  database: "FuturePath",
-  password: "Minhan0011.", // Thay thế bằng mật khẩu thực tế
-  port: 5432,
+  host: "turntable.proxy.rlwy.net",
+  database: "railway",
+  password: "MBRciGDWNvShKHLdNioiONHjcyjSnwuq", // Thay thế bằng mật khẩu thực tế
+  port: 57668,
   max: 20,
   idleTimeoutMillis: 30000,
 });
