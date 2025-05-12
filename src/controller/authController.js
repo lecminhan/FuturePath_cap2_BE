@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const registerUser = async (req, res) => {
-  const { username, email, password, role_id = 1 } = req.body;
+  const { username, email, password, role_id = 2 } = req.body;
 
   // Validate input
   if (!username || !email || !password) {
