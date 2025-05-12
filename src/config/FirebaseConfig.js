@@ -1,6 +1,6 @@
 // firebaseConfig.js
 const firebaseAdmin = require("firebase-admin");
-const serviceAccount = require("../../futurepath-98ae6-firebase-adminsdk-fbsvc-1993b16718.json"); // Đảm bảo đường dẫn đúng
+const serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG_JSON);
 
 // Khởi tạo Firebase Admin SDK
 firebaseAdmin.initializeApp({
