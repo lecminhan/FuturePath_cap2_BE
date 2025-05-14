@@ -5,6 +5,7 @@ const authRoutes = require("./src/router/authRouters");
 const quizzesRoutes = require("./src/router/quizzesRouters");
 const conversation = require("./src/router/ConversationRoutes");
 const chatbot = require("./src/router/chatRoutes"); // Import route chatbot
+const expert = require("./src/router/expertRouters");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 
@@ -27,7 +28,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/quizzes", quizzesRoutes);
 app.use("/api/conversation", conversation);
 app.use("/api/chatbot", chatbot);
-
+app.use("/api/getexpert", expert);
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
