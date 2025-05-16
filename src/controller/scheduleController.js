@@ -74,8 +74,30 @@ const createConsultantSchedule = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+const getSchedulesByExpertId = async (req, res) => {
+  try {
+    const expertId = req.params.expertId;
 
+    if (!expertId) {
+      return res.status(400).json({ error: "Thiếu expert_id" });
+    }
+
+    const query = `
+      SELECT * FROM "ConsultantSchedule"
+      WHERE expert_id = $1
+      ORDER BY available_date, start_time
+    `;
+    const values = [expertId];
+    const { rows } = await pool.query(query, values);
+
+    return res.status(200).json({ success: true, schedules: rows });
+  } catch (error) {
+    console.error("Error fetching schedules by expert_id:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
 module.exports = {
   getAllConsultantSchedules,
   createConsultantSchedule,
+  getSchedulesByExpertId
 };
