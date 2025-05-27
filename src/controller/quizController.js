@@ -66,14 +66,14 @@ const quizController = {
 
     try {
       const query = `
-        INSERT INTO "QuizResult" (
-          user_id, quiz_id, quiz_type,
-          E_score, I_score, S_score, N_score, T_score, F_score, J_score, P_score,
-          R_score, I_score_h, A_score_h, S_score_h, E_score_h, C_score_h,
-          result
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
-        RETURNING *;
-      `;
+  INSERT INTO "QuizResult" (
+    user_id, quiz_id, quiz_type,
+    "E_score", "I_score", "S_score", "N_score", "T_score", "F_score", "J_score", "P_score",
+    "R_score", "I_score_h", "A_score_h", "S_score_h", "E_score_h", "C_score_h",
+    result
+  ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)
+  RETURNING *;
+`;
 
       const values = [
         user_id,
