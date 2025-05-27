@@ -51,32 +51,35 @@ exports.createConversation = async (req, res) => {
       }
     }
 
+    // Tạo timestamp để dùng chung cho Firebase và PostgreSQL
+    const timestamp = new Date().toISOString();
+
     // Firebase
     const historyRef = database.ref("ChatbotHistory");
-    const conversationRef = historyRef.child(
-      current_conversation_id.toString()
-    );
+    const conversationRef = historyRef.child(current_conversation_id.toString());
     const newMessageRef = conversationRef.push();
 
     await newMessageRef.set({
       message: messages,
       response: response,
-      timestamp: new Date().toISOString(),
+      timestamp: timestamp,
       user_id: user_id,
       conversation_id: current_conversation_id,
     });
 
     // PostgreSQL
     const createChatHistoryQuery = `
-      INSERT INTO "ChatbotHistory" (conversation_id, user_id, message, response)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO "ChatbotHistory" (conversation_id, user_id, message, response, timestamp)
+      VALUES ($1, $2, $3, $4, $5)
       RETURNING *;
     `;
+
     const chatResult = await pool.query(createChatHistoryQuery, [
       current_conversation_id,
       user_id,
       messages,
       response,
+      timestamp,
     ]);
 
     if (chatResult.rows.length === 0) {
@@ -95,6 +98,7 @@ exports.createConversation = async (req, res) => {
     res.status(500).send("Lỗi khi tạo cuộc trò chuyện");
   }
 };
+
 // Lấy danh sách tất cả cuộc trò chuyện
 exports.getConversations = async (req, res) => {
   const query = 'SELECT * FROM "ChatbotHistory";';
